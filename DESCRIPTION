@@ -1,0 +1,14 @@
+Package: SANTA
+Type: Package
+Title: Strength Analysis of Network Associations
+Version: 0.99.4
+Date: 23 November 2012
+Author: Alex Cornish and Florian Markowetz
+Maintainer: Alex Cornish <a.cornish12@imperial.ac.uk>
+Imports: msm, snow
+Depends: R (>= 2.14), igraph
+Suggests: RUnit, BiocGenerics, org.Sc.sgd.db
+Description: This package provides methods for measuring the strength of association between a network and a phenotype. It does this by measuring clustering of the phenotype across the network. Vertices can also be individually ranked by their strength of association with high-weight vertices.  
+License: Artistic-2.0
+biocViews: NetworkAnalysis, NetworkEnrichment, Clustering
+LazyLoad: yes

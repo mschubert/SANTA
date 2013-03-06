@@ -1,0 +1,54 @@
+\name{plot.Knet}
+\alias{plot.Knet}
+\title{
+Plot the results of the Knet function.
+}
+\description{
+Plot the observed Knet curve against the quantiles of the permuted Knet curves and the observed AUK against the permuted AUKs. 
+}
+\usage{
+\S3method{plot}{Knet}(x, sequential = FALSE, \dots)
+}
+\arguments{
+  \item{x}{
+The results from the Knet function. If no permutations are contained within these results, then only the observed Knet curve and observed AUK are plotted.
+}
+  \item{sequential}{
+A logical value. If \code{TRUE}, then the plots are sequential. Otherwise, the two plots are plotted alongside each other.
+}
+  \item{\dots}{
+Additional arguements to be passed to \code{plot}.  	
+}
+}
+\details{
+If the high-weight vertices are clustered, then the observed Knet curve and AUK will be high relative to the permuted Knet curves and AUKs. The greater the degree of clustering, the greater the difference between the observed and permuted statistics. If the degree of clustering is low, then the observed and permuted curves and AUKs will likely overlap.
+
+The first plot displays the the observed curve in red and the quantiles of the permuted curves in yellow. The quantile boundaries are displayed as grey lines. These boundaries are specified in the Knet function. The second plot displays the observed AUK as a red line and the distribution of permuted AUKs in grey. 
+}
+\value{
+Two plots. The first showing the observed Knet curves against the quantiles of the permuted Knet curves. The second showing the observed AUK against the distribution of permuted AUKs. 
+}
+\references{
+Paper in preparation.
+}
+\author{
+Alex Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
+}
+\seealso{
+\code{\link[SANTA:Knet]{Knet}}
+}
+\examples{
+# Plot results with hit clustering
+g.clustered <- CreateGraph(n=100, type="barabasi", gen.vertex.weights=TRUE, lambda=10, 
+	nhits=10, binary.pheno=FALSE)
+res.clustered <- Knet(g.clustered, nperm=10)
+res.clustered$pval
+plot(res.clustered)
+
+# Plot results without hit clustering
+g.unclustered <- CreateGraph(n=100, type="barabasi", gen.vertex.weights=TRUE, lambda=0, 
+	nhits=10, binary.pheno=FALSE)
+res.unclustered <- Knet(g.unclustered, nperm=10)
+res.unclustered$pval
+plot(res.unclustered)
+}

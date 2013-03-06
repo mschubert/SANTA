@@ -1,0 +1,20 @@
+importFrom(msm, rtnorm)
+
+importFrom(snow, makeCluster, clusterEvalQ, parSapply, stopCluster)
+
+export(
+	"CheckAttributes", 
+	"CreateGraph", 
+	"CreateGrid", 
+	"DistGraph", 
+	"GraphDiffusion", 
+	"GraphMFPT", 
+	"Knet", 
+	"Knode", 
+	"MarkovCentrality", 
+	"plot.Knet", 
+	"SpreadHits"
+)
+
+
+useDynLib(SANTA)

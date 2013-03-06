@@ -1,0 +1,369 @@
+@
+%\VignetteIndexEntry{Using SANTA} 
+%\VignetteDepends{SANTA} 
+%\VignetteKeywords{SANTA} 
+%\VignettePackage{SANTA} 
+
+\SweaveOpts{engine=R} 
+
+\documentclass[12pt]{article}
+
+% Required packages
+\usepackage{amsmath}
+\usepackage[pdftex]{graphicx}
+\usepackage{subfigure} 
+\usepackage{layouts}
+\usepackage{bm}
+\usepackage{color}
+
+% Other packages
+\usepackage{titlesec}
+\usepackage{url}
+\usepackage{float}
+\usepackage{epsfig}
+
+
+% Content references
+\usepackage{hyperref}
+\hypersetup{linktocpage}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+% Remove indenting and the start of paragraphs
+\setlength\parindent{0pt}
+
+% Plotting parameters
+\SweaveOpts{prefix.string=plot, eps = FALSE, pdf = TRUE}
+\SweaveOpts{width=10, height=6}
+
+
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rfunction}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+\newcommand{\santa}{\textbf{\sffamily SANTA} }
+\newcommand{\Knet}{\textbf{\texttt{K\textsuperscript{net}}} }
+\newcommand{\Knode}{\textbf{\texttt{K\textsuperscript{node}}} }
+
+
+% Title 
+\title{Vignette for \santa}
+\author{Alex Cornish and Florian Markovetz}
+
+% Begin document, print title and contents
+\begin{document}
+
+% Make the title
+\maketitle
+\tableofcontents
+\newpage
+
+<<Ropts, echo=FALSE, results=hide>>=
+options(width=70)
+@ 
+
+
+\section{Introduction}
+
+This document contains instructions on how to employ the functions contained within the \santa package. \santa builds upon Ripley's K-function \cite{Gaetan2010}, a well-established approach in spatial statistics that measures the clustering of points on a plane, by applying it to networks. Using this approach, the \Knet  and \Knode functions are defined. \Knet detects the clustering of hits across a network in order to measure the strength of association between the network and a phenotype. \Knode ranks genes according their distance from the hits, providing a natural way of prioritising vertices for follow-up analyses. \\
+
+The \santa package contains functions that can be used to measure the distance between vertex pairs (\texttt{GraphDiffusion} and \texttt{GraphMFPT}), a function to create graphs according to set parameters (\texttt{CreateGraph}) and a function that can be used to visualise the \Knet function (\texttt{plot.Knet}). \\
+
+\santa uses the \texttt{igraph} package to handle the networks. \\
+
+
+
+
+
+\section{Overview of \santa}
+
+\subsection{Guilt-by-association}
+
+The guilt-by-association (GBA) principle states that genes with the same interaction partners are more likely to share biological function. For example, two genes seen to interact in a synthetic genetic array (SGA) are more likely to encode products involved in the same pathway or complex than two genes not seen to interact. \Knet uses this principle to measure the strength of association between a network and a phenotype. By measuring the clustering of the gene set across biological networks it becomes possible to identify the network that best explains the mechanisms and processes that produce the set. \\
+
+This principle is also used by \Knode to prioritise genes for follow up studies. If a set of genes has been identified as being associated with a particular cellular function, then the GBA principle states that genes seen interacting with this set are also likely to be involved in the function. \\
+
+\santa addresses two complementary goals: it can (i) functionally annotate experimentally derived networks using curated gene sets, and (ii) annotate experimentally derived gene sets using curated networks. To exemplify the first goal, we show that our approach helps to elucidate the functional content of the \emph{S. cerevisiae} genetic interaction network and its rewiring in DNA damage response (Section~\ref{sec:case_1}). 
+
+
+
+
+
+\subsection{Ripley's K-statistic on networks}
+
+Ripley's K statistic is a tool used to analyse the spatial distribution of points on a plane. It is typically applied to two- or higher-dimensional spaces. In two dimensions, the function works by counting the number of points contained within circles of radius $s$, positioned around each point on the plane. As $s$ is increased, a greater proportion of the points become contained within each circle. If the points on the plane are clustered, then the number of points contained within each circle will increase faster with $s$. \\
+
+By taking the distances between vertex pairs in networks, it becomes possible to apply Ripley's K statistic and measure the clustering of high-weight vertices:
+
+\begin{equation}
+K^{net}(s) = \frac{2}{p^{2}}\sum_{i}p_{i}\sum_{j}(p_{j} - \bar{p})~\textbf{I}(d^{g}(i,j)\leq s) 
+\end{equation}
+
+where $p_{i}$ is the weight of node $i$, $d^{g}(i,j)$ is the distance between node $i$ and node $j$ according to the distance method selected (see Section~\ref{sec:distances}). $\textbf{I}(d^{g}(i,j)\leq s)$ is an indicator function and equals $1$ if $d^{g}(i,j)\leq s$  and $0$ otherwise. $p = \sum_{k} p_{k}$ and $\bar{p} = \frac{p}{n_{p}}$, where $n_{p}$ equals the number of vertices within the network. \\
+
+Ripley's K-function has previously been applied to geographical networks (such as road networks) in order to identify the clustering of objects along these networks \cite{Okabe2001}. However, key differences between the previous implementation and the implementation of the K-function used in \santa (such as the inclusion of continuous weights and the position of the weight on vertices rather than on edges) allows for the function to be applied to numerous biological networks. 
+
+
+
+
+
+\subsection{Using \Knet to measure the clustering of high-weight vertices}
+
+\santa applies spatial statistics and the GBA principle to networks in order to measure the strength of association between a network and a phenotype. It does this by quantifying the clustering of high-weight vertices within the network. High-weight vertices represent those genes that are part of a gene set or are most strongly linked with the phenotype. As previously explained, the GBA principle implies that the stronger the clustering, the better the network is at describing the mechanisms that produce and maintain the phenotype. \\
+
+The AUK of a \Knet or \Knode curve can be computed by subtracting the area of the region between $K_{i}^{net}(s)=0$ and negative regions of the curve from the region between $K_{i}^{net}(s)=0$ and positive regions of the curve. If there is clustering of high-weight vertices on the network then the \Knet function will initially increase with $s$ and the AUK will be high. Conversely, if there is no clustering of high-weight vertices then the function is unlikely to increase and AUK will equal a value closer to 0.\\ 
+
+In some scenarios, weights may only be available for a subset of graph vertices. For example, in RNAi screens, some genes may be identified as being involved in maintaining a phenotype (and be given a high weight), some genes may be identified as not being involved (and be given a low weight or a weight of 0) and some genes may not be tested. Genes for which no data is available should be excluded from the \Knet function. However, the gene should remain in the graph to allow for the correct calculation of vertex pair distances. This is done by giving the vertex a weight of \textbf{NA}. \\
+
+Because of the large number of possible graph structures, it is not possible to determine how significant an observed \Knet curve is by simply taking the AUK. In order to determine significance, the vertex weights on the graph are randomly permuted and the \Knet AUK calculated for each of these permutations. It is then possible to compare the observed AUK score to the distribution of permuted AUK scores and quantify the significance. The distribution of permuted AUK statistics is modelled as a normal distribution and a z-test performed to produce an empirical p-value for the observed AUK. The p-values produced represents the probability that the clustering of vertex weights at least as extreme as what is observed occurs given that the vertex weights are distributed randomly across the network. The figures produced in Section~\ref{sec:case_1} visualise this comparison of observed and permuted AUK scores. \\
+
+
+
+
+
+\subsection{Using \Knode to rank vertices by their strength of association with high-weight vertices}
+
+Taking the inner sum of the \Knet equation makes it possible to rank vertices by their distance from high-weight vertices. This inner sum is called the \Knode function:
+
+\begin{equation}
+K_{i}^{node}(s) = \frac{2}{p}\sum_{j}(p_{j} - \bar{p})~\textbf{I}(d^{g}(i,j)\leq s) 
+\end{equation}
+
+The \Knode function provides a natural way to prioritise genes for follow up studies. This function incorporates the network structure and each vertex weight in order to quantify the strength of association between an individual vertex and a distribution of vertex weights. For those vertices  close to a large number of high-weight vertices, the \Knode function will initially increase with $s$, before returning to $0$ as $s$ reaches the diameter of the graph. Conversely, for those vertices positioned further away from the high-weight vertices, the \Knode function will remain closer to $0$. By calculating the \Knode AUK of each vertex, it is possible to rank them according to their distance from the high-weight vertices. Vertices with high AUKs are closest to, and therefore most-strongly associated with, these high-weight vertices. \\
+
+
+
+
+
+\subsection{Measuring the distance between vertex pairs in a graph}
+\label{sec:distances}
+
+\subsubsection{Shortest path method}
+
+One of the simplest ways to measure the distance between vertex pairs in a graph is by taking the distance along the shortest path between the vertices. In a graph without weighted edges, the length of the shortest path is equal to the number of edges in the path. In a graph with weighted edges, the length of the shortest path is equal to the sum of the edge weights in the path. \\
+ 
+ 
+ 
+ 
+
+\subsubsection{Diffusion kernel-based method}
+
+The diffusion kernel-based distance measure can be considered as the physical process of diffusion though the graph. Therefore, unlike the shortest paths distance measure, the diffusion kernel-based measure incorporates not only the distance of the shortest path connecting two vertices, but the distances across multiple paths. \\
+
+The distance between each vertex pair is calculated using the negative graph Laplacian $H$, a square matrix of size |$V$| with entries (in the unweighted and weighted case, respectively): 
+
+\begin{equation}
+H_{ij}^\text{unweighted} =   \begin{cases} \ 1 & \text{for}\  i \sim j \\ \ -k_i & \text{for}\  i=j \\ \ 0 & \text{otherwise} \end{cases} 
+\end{equation}
+\begin{equation}
+H_{ij}^\text{weighted} = \  \begin{cases} \ w_{ij} & \text{for}\  i \sim j \\ \ - \sum_jw_{ij} & \text{for}\  i=j \\ \ 0 & \text{otherwise}, \end{cases} 
+\end{equation}
+
+where $k_{i}$ is the degree of node $i$ (the number of edges associated with node $i$) and $w_{ij}$ is the weight of the edge between nodes $i$ and $j$. A diffusion kernel is then defined by the matrix exponential:   
+
+\begin{equation}
+D := \exp ( \beta H ) =  \lim_{n \rightarrow \infty} \left( 1 + \frac{\beta H}{n} \right)^n  =  I + \beta H + \frac{1}{2!} \beta H = \frac{1}{3!} \beta H + \ldots
+\end{equation}
+
+To compute the matrix exponential we make use of the fact that $H$ is diagonizable, i.e. $H = U \Delta U^{-1}$, where $\Delta$ is a diagonal matrix with entries $(\delta_i)_{i=1, \ldots ,n}$. It follows that $D = \exp ( \beta H) = U \exp (\beta \Delta) U^{-1}$, where $\exp (\beta \Delta) $ simply is a diagonal matrix with entries $(\exp (\beta \delta_i))_{i=1, \ldots ,n}$. 
+
+
+
+
+\subsubsection{Mean first-passage time-based method}
+
+The mean first-passage time distance measure computes the distance between vertex $a$ and $b$ ($m_{a,b}$) by calculating the expected amount of time that a random walk emanating from node $a$ takes to reach node $b$ for the first time \cite{White2003}. \\
+
+\begin{equation}
+m_{a,b} = \sum^{\infty}_{n=1} n~f^{(n)}_{a,b}
+\end{equation}
+
+where $n$ is the number of steps taken and $f^{(n)}_{a,b}$ is the probability that the random walk reaches node $b$ for the first time after $n$ steps. Because the mean first-passage time from vertex $a$ to vertex $b$ and the mean first-passage time from vertex $b$ to vertex $a$ may not be equal, a distance between the two nodes $d^{g}_{a,b}$ is derived by taking the mean. \\
+
+
+
+
+
+\section{Case study I - Using \Knet to investigate the re-wiring of a cell undergoing DNA damage}
+\label{sec:case_1}
+
+This section will demonstrate how the \santa \Knet function can be used to measure the clustering of high-weight vertices on a network and thereby quantify the strength of association between a network and a phenotype.  \\
+
+Bandyopadhyay et al. mapped genetic interaction (GI) networks in yeast under normal laboratory conditions and in yeast exposed to the DNA-damaging agent methyl methanesulfonate (MMS) \cite{Bandyopadhyay2010}. In order to investigate the differences between these functional networks, we will use \Knet to quantify the clustering of genes involved in responding to DNA damage. This will allow us to determine whether gene associated with this function cluster more strongly on one of the networks, thereby allowing us to better understand the changes that are occurring within the cell. \\
+
+We will now load the \santa package and two data frames containing the interactions within the networks. Lists of edges, along with associated scores, can be converted into \santa-compatible graphs (\texttt{igraph} objects) using the \texttt{graph.data.frame} function contained within the \texttt{igraph} package.  
+
+<<echo=true>>=
+library(SANTA)
+data(treated.dataframe)
+data(untreated.dataframe)
+g.treated <- graph.data.frame(treated.dataframe, directed=FALSE )
+g.untreated <- graph.data.frame(untreated.dataframe, directed=FALSE)
+@
+
+\santa requires any networks to be in the form of an \texttt{igraph} graph. Another commonly used graph structure is \texttt{graphNEL}. This \texttt{graphNEL} structure is used in other R-packages, including \texttt{KEGGgraph} and \texttt{Graphite}, which contain graph objects sourced from the NCI, KEGG, Biocarta and Reactome databases. Graphs can be converted between the \texttt{graphNEL} and \texttt{igraph} structures using the \texttt{igraph.from.graphNEL} and \texttt{igraph.to.graphNEL} functions contained within the \texttt{igraph} package. \\
+
+In order to make a fair comparison between the two networks, it is advisable to ensure that the networks contain the same genes. Therefore, we will compare the genes contained within each network and add those that are missing. \\
+
+<<echo=true>>=
+name.treated <- get.vertex.attribute(g.treated, "name")
+name.untreated <- get.vertex.attribute(g.untreated, "name")
+mis.treated <- name.untreated[which(! name.untreated %in% name.treated)]
+mis.untreated <- name.treated[which(! name.treated %in% name.untreated)]
+g.treated <- add.vertices(g.treated, length(mis.treated), 
+	attr=list(name=mis.treated))
+g.untreated <- add.vertices(g.untreated, length(mis.untreated), 
+	attr=list(name=mis.untreated))
+@
+
+We will use information from the Gene Ontology (GO) project \cite{GeneOntology2000}, made available through the \texttt{org.Sc.sgd.db} package, to identify those genes involved in responding to DNA damage. The Gene Ontology project groups into genes according to shared function. The GO term with ID \texttt{GO:0006974} is \emph{Response to DNA Damage Stimulus}. We will now use the \texttt{org.Sc.sgd.db} package to identify the network genes associated with \texttt{GO:0006974}. Similar code can be used to identify genes associated with other GO terms.\\
+
+<<echo=true>>=
+library(org.Sc.sgd.db)
+xx <- as.list(org.Sc.sgdGO2ALLORFS)
+associated.genes <- xx[["GO:0006974"]]
+association.treated <- as.numeric(get.vertex.attribute(g.treated, 
+	"name") %in% associated.genes)
+association.untreated <- as.numeric(get.vertex.attribute(g.untreated, 
+	"name") %in% associated.genes)
+@
+
+If a gene is associated with the GO term it will given a score of 1 in \texttt{association.values}. If it is not associated, it will be given a score of 0. We will now store these scores in the 2 graphs under a vertex attribute called \texttt{rdds}.\\
+
+<<echo=true>>=
+g.treated <- set.vertex.attribute(g.treated, 
+	name="rdds", value=association.treated)
+g.untreated <- set.vertex.attribute(g.untreated, 
+	name="rdds", value=association.untreated)
+@
+
+\Knet is also able to incorporate edge weights when quantifying the clustering of high-weight vertices. Edge weights can represent numerous different biological properties, including the strength of a physical interaction between 2 gene products, or in the case of our 2 networks, the strength of the genetic interaction. It is necessary to convert these weights into distances, so that strongly connected genes are linked by edges with small distances. We will convert the genetic interactions into distances by taking the absolute values of the interaction strengths and subtracting them from the largest absolute interaction strength value. This will also ensure that all edge distances are positive. The inclusion of negative edge distances will result in \Knet producing a error. \\
+
+<<echo=true>>=
+s.treated <- get.edge.attribute(g.treated, name="gi-score")
+s.untreated <- get.edge.attribute(g.untreated, name="gi-score")
+g.treated <- set.edge.attribute(g.treated, name="distance", 
+	value=max(abs(s.treated)) - abs(s.treated))
+g.untreated <- set.edge.attribute(g.untreated, name="distance", 
+	value=max(abs(s.untreated)) - abs(s.untreated))
+@
+
+We will now apply the \Knet function to the GO term on each network in order to determine on which network the GO term clusters most strongly. The greater the number of permutations run, the greater the reproducibility of the p-value. We will use 100 permutations of the vertex weights in order to produce the p-values. \\
+
+By default, the function attempts to use a vertex attribute named \texttt{pheno} as vertex weights and an edge attribute named \texttt{distance} as edge distances. We will need to specify that the GO term associations should be used a vertex weights, but can leave the default edge attribute, as the modified GI scores were saved under this attribute name previously. \\
+
+<<echo=true>>=
+res.treated <- Knet(g.treated, nperm=100, dist.method="shortest.paths",  
+	vertex.attr="rdds")
+res.untreated <- Knet(g.untreated, nperm=100, dist.method="shortest.paths", 
+	vertex.attr="rdds")
+res.treated$pval
+res.untreated$pval
+@
+
+As the permutations of the vertex weights are random, the p-values you calculate may not be the same as the ones shown above. \\
+
+Since the GO term tested was the \emph{Response to DNA Damage Stimulus} term, it is not surprising that the gene set clusters more significantly on the treated network (as indicated by the lower p-value). The yeast exposed to the DNA-damaging agent would have activated or upregulated pathways involved in responding to the agent, thereby increasing the strength of the genetic interaction between DNA-damage response-related genes. The same method can be used to GO terms for which the relative association strengths are less predictable. \\
+
+We will now visualise the observed and permuted \Knet curves and AUKs for the GO term on the DNA-damaged and undamaged networks. \\
+
+<<echo=false, label=fig1plot, include=FALSE>>= 
+plot(res.treated)
+@
+
+<<echo=false, label=fig2plot, include=FALSE>>= 
+plot(res.untreated)
+@
+
+
+\begin{figure}[H]
+\begin{center}
+<<label=fig1, fig=TRUE, echo=FALSE>>=
+<<fig1plot>>
+@
+<<label=fig2, fig=TRUE, echo=FALSE>>=
+<<fig2plot>>
+@
+\end{center}
+\caption{(\textbf{Left}) The observed \Knet-function curve (red line) and the permuted \Knet-function curve quantiles (yellow area) for the \emph{Response to DNA Damage Stimulus} gene set on the DNA-damaged (\textbf{Top Left}) and undamaged (\textbf{Bottom Left}) GI networks. The position of the observe curves relative to the permuted quantiles indicates that the gene set clusters on both networks. (\textbf{Right}) The observed \Knet-function AUK (red line) and the permuted \Knet-function AUKs (grey histogram) on the DNA-damaged (\textbf{Top Right}) and undamaged (\textbf{Bottom Right}) GI networks. The fact that the observed AUKs are greater than the permuted AUKs again indicates that the gene set clusters on both networks. The greater distance between the observed AUK and the permuted AUKs in the DNA-damaged network indicates that clustering of the gene set is more significant in this network.}
+\label{fig:one}
+\end{figure}
+
+The left-hand plots display the the observed curve in red and the quantiles of the permuted curves in yellow. The quantile boundaries are displayed as grey lines. These boundaries are specified in the \Knet function. The right plot displays the observed AUK as a red line and the distribution of permuted AUKs in grey. If clustering of high-weight vertices is present on a graph, then the observed \Knet curve and AUK will be greater than the permuted \Knet curves and AUKs. The greater the degree of clustering, the greater the difference between the observed and permuted statistics. If the degree of clustering is low, then the observed and permuted curves and AUKs will overlap. A z-test is performed on the observed and permuted AUKs in order to produce a p-value for the clustering. \\
+
+
+
+
+
+\section{Case study II - Using \Knode to prioritise genes for follow-up functional studies}
+\label{sec:case_2}
+
+This section will demonstrate how the \santa \Knode function can be used to rank vertices in a network by their respective strength of association with high-weight vertices present on the network. \\
+
+The GO database contains the largest number of gene-function annotation currently available. However, a significant proportion of known genes remain unannotated or under-annotated. Experimentally testing the function of genes is an expensive and time-consuming process. Therefore, it is important to be able to computationally identify the unannotated genes that are most likely to share functionality with previously identified sets of genes. Under the GBA principle, unannotated genes that share a large number of functional interactions with an annotated gene set are likely to be involved in the gene sets function. Because of this, the \Knode function is a useful tool for ranking unannotated genes by their likely association with a function. \\
+
+We will use a GI network used in the previous section \cite{Bandyopadhyay2010} to rank unannotated genes by their likely involvement in the \emph{Response to DNA Damage Stimulus} function  \cite{GeneOntology2000}. We will now load the \santa library and a data frame containing the edges from the MMS-treated (DNA-damaged) network and create a \santa-compatible graph.\\
+
+<<echo=true>>=
+library(SANTA)
+data(treated.dataframe)
+g.treated <- graph.data.frame(treated.dataframe, directed=FALSE)
+@
+
+As previously shown, the \emph{Response to DNA Damage Stimulus} GO term associates more strongly with the MMS-treated GI network. This is due to the functional re-wiring that occurs within the cell in response to exposure to this DNA-damaging agent. We will therefore again identify the genes contained within this network that are association with this GO term and store them under a vertex attribute call \texttt{rdds}.\\
+
+<<echo=true>>=
+library(org.Sc.sgd.db)
+xx <- as.list(org.Sc.sgdGO2ALLORFS)
+associated.genes <- xx[["GO:0006974"]]
+association.values <- as.numeric(get.vertex.attribute(g.treated, 
+	"name") %in% associated.genes)
+g.treated <- set.vertex.attribute(g.treated, name="rdds", 
+	value=association.values)
+@
+
+As mentioned in the previous section, it is important to convert edge weights to meaningful measures of distance between connected vertices. The GI scores are converted by subtracting the absolute GI score of each edge from the maximum absolute GI score. This ensures that those gene pairs seen to have the strongest interactions are connected by the shortest distances. \\
+
+<<echo=true>>=
+s.treated <- get.edge.attribute(g.treated, name="gi-score")
+g.treated <- set.edge.attribute(g.treated, name="distance", 
+	value=max(abs(s.treated)) - abs(s.treated))
+@
+
+We will use the vertex attribute containing GO term association information as the vertex weights in the \Knode function. By default, the edge attribute named \texttt{distance} is used as edge distances.\\
+
+Alongside each vertices' AUK score, a number of other centrality scores can be returned by the \Knode function, including each vertices' weight, degree, betweenness and Markov centrality. Specifying \texttt{only.Knode=FALSE} results in this information being returned alongside the AUK score as a data frame. \\
+
+<<echo=true>>=
+res <- Knode(g.treated, vertex.attr="rdds", only.Knode=FALSE)
+res[1:10, 1:2]
+@
+
+The genes with the highest AUK scores are those with the strongest associations to the gene set. Since we only want to look at the ranking of the unannotated genes, we can remove annotated genes using the vertex weight information given in the second column of the data frame. \\
+
+<<echo=true>>=
+res[res[,2]!=1, ][1:10, 1:2]
+@
+
+The genes ranked above are the unannotated genes most strongly associated with the functional set. These genes represent the unannotated genes most likely be involved in the response to DNA damage stimulus. Experimental testing of these genes would be able to verify whether this is true or not. \\
+
+
+
+
+\section{Session info}
+
+This document was produced using:
+
+<<results=tex, print=TRUE>>=
+toLatex(sessionInfo())
+@ 
+
+\bibliographystyle{unsrt}
+\bibliography{refs}
+
+\end{document}
