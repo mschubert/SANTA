@@ -54,4 +54,10 @@ test_DistGraph <- function() {
   correct.factor <- 4.5
   D9 <- DistGraph(g, dist.method="shortest.paths", correct.inf=TRUE, correct.factor=correct.factor)
   checkEquals(D9[1, 7] == correct.factor * (max(D9[D9 != D9[1, 7]])), TRUE)
+  
+  # test that DistGraph correctly handles the lack of infinite values on fully connected graphs
+  g <- graph.empty(6, directed=FALSE)
+  g <- add.edges(g, c(1, 2, 1, 3, 2, 4, 3, 4, 1, 5, 5, 6))
+  D10 <- DistGraph(g, dist.method="shortest.paths", correct.inf=TRUE)
+  checkEquals(all(is.finite(D10)), TRUE)
 }

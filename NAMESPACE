@@ -8,7 +8,7 @@ export(
 	"CreateGrid", 
 	"DistGraph", 
 	"GraphDiffusion", 
-	"GraphMFPT", 
+	"GraphMFPT",
 	"Knet", 
 	"Knode", 
 	"MarkovCentrality", 

@@ -10,22 +10,33 @@ CheckAttributes <- function(
 
   for (attr in vertex.attr) {
     vertex.weights <- get.vertex.attribute(g, attr)
-	vertex.weights[is.na(vertex.weights)] <- 0
+    
+    # identify the vertex weights that are missing
+	  missing <- is.na(vertex.weights)
 
     # check that none of the vertex weights are infinite. If there are any, return error
-    if (sum(vertex.weights == Inf) > 0) stop("vertex attribute with name '", attr, "' contains infinite values", sep="")
+    if (sum(vertex.weights[!missing] == Inf) > 0) stop(attr, " vertex weights contain infinite values")
     
-    # check that vertex weights are numeric. If not try to convert. If conversion is not possible, return error.
+    # check that vertex weights are numeric. If not try to convert. If conversion is not possible, return error
     if (!is.numeric(vertex.weights)) {
+      if (is.logical(vertex.weights)) {
+     	missing.char <- is.na(vertex.weights)
+     	vertex.weights[missing.char] <- FALSE
+      } else {
+      	missing.char <- vertex.weights == "NA"
+        vertex.weights[missing.char] <- "0"     	
+      }
+    	
       suppressWarnings(vertex.weights <- as.numeric(vertex.weights))
       if (sum(is.na(vertex.weights)) > 0) stop("unable to convert non-numeric vertex weights to numerals")
+      vertex.weights[missing.char] <- NA
       g <- remove.vertex.attribute(g, attr)
       g <- set.vertex.attribute(g, attr, value=vertex.weights)
       warning("non-numeric vertex weights found and converted to numerals")
     }
-	
-    # check that all vertex weights are greater or equal to 0. If not, return error.
-    if (!all(vertex.weights >= 0)) stop("negative vertex weights found - vertex wieghts should be greater or equal to 0")
+	  
+    # check that all vertex weights are greater or equal to 0. If not, return error
+    if (!all(vertex.weights[!is.na(vertex.weights)] >= 0)) stop(attr, " vertex weights contain negative values")
   }
   
   # check that edge distances are present, if not then they are all set equal to 1. This is not an error, as some graphs do not have edge distances
@@ -37,14 +48,14 @@ CheckAttributes <- function(
   # check that edge distances are numeric. If not try to convert. If conversion is not possible, return error. 
   if (!is.numeric(get.edge.attribute(g, edge.attr))) {
     edge.distances <- as.numeric(get.edge.attribute(g, edge.attr))
-    g <- remove.edge.attribute(g, edge.attr)
     if (sum(is.na(edge.distances)) > 0) stop("unable to convert non-numeric edge distances to numerals")
+    g <- remove.edge.attribute(g, edge.attr)
     g <- set.edge.attribute(g, edge.attr, value=edge.distances)
     warning("non-numeric edge distances found and converted to numerals")
   }
   
   # if negative edge distances present, return error
-  if (!all(get.edge.attribute(g, edge.attr) >= 0)) stop("negative edge distances found - edge distances should be greater or equal to 0")
+  if (!all(get.edge.attribute(g, edge.attr) >= 0)) stop("edge distances contain negative values")
 	    
   # ensure edge distances range between 0 and 1
   edge.distances <- get.edge.attribute(g, edge.attr)

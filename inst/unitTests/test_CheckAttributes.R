@@ -12,6 +12,20 @@ test_CheckAttributes <- function() {
   suppressWarnings(suppressMessages((g <- CheckAttributes(g, vertex.attr="vertex.attr"))))
   checkEquals(get.vertex.attribute(g, name="vertex.attr")[1], 1)
   g <- remove.vertex.attribute(g, "vertex.attr")
+
+  # test that Check Attributes successfully converts logical vertex weights
+  values <- c(T, T, T, T, F, F, F, F, T, T)
+  g <- set.vertex.attribute(g, name="vertex.attr", value=values)
+  suppressWarnings(suppressMessages((g <- CheckAttributes(g, vertex.attr="vertex.attr"))))
+  checkEquals(get.vertex.attribute(g, name="vertex.attr"), c(1, 1, 1, 1, 0, 0, 0, 0, 1, 1))
+  g <- remove.vertex.attribute(g, "vertex.attr")
+
+  # test that Check Attributes successfully converts non-numeric "NA"-containing vertex weights
+  values <- c("1", "NA", "3", "4", "5", "6", "7", "8", "9", "NA")
+  g <- set.vertex.attribute(g, name="vertex.attr", value=values)
+  suppressWarnings(suppressMessages((g <- CheckAttributes(g, vertex.attr="vertex.attr"))))
+  checkEquals(get.vertex.attribute(g, name="vertex.attr"), c(1, NA, 3, 4, 5, 6, 7, 8, 9, NA))
+  g <- remove.vertex.attribute(g, "vertex.attr")
   
   # test that CheckAttributes produces an error if it is unable to convert non-numeric vertex weights
   values <- runif(vcount(g))
@@ -27,6 +41,13 @@ test_CheckAttributes <- function() {
   checkException(CheckAttributes(g, vertex.attr="vertex.attr"), silent=TRUE)
   g <- remove.vertex.attribute(g, "vertex.attr")
   
+  # test that CheckAttributes successfully handles NA-containing vertex weights
+  values <- c(1, NA, 3, 4, 5, 6, 7, 8, 9, NA)
+  g <- set.vertex.attribute(g, name="vertex.attr", value=values)
+  suppressWarnings(suppressMessages((g <- CheckAttributes(g, vertex.attr="vertex.attr"))))
+  checkEquals(get.vertex.attribute(g, name="vertex.attr"), c(1, NA, 3, 4, 5, 6, 7, 8, 9, NA))
+  g <- remove.vertex.attribute(g, "vertex.attr")
+   
   # test that CheckAttributes sets missing edge distances to 1
   values <- runif(vcount(g))
   g <- set.vertex.attribute(g, name="vertex.attr", value=values)
