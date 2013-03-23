@@ -1,5 +1,5 @@
 AsiGraph <- function(v, g) {
-  # convert vertex indices to an igraph object
+  ### convert vertex indices to an igraph object
   if (class(v) == "igraph.vs") return(v)
   class(v) <- "igraph.vs"            
   ne <- new.env()
