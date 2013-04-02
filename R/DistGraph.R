@@ -27,7 +27,7 @@ DistGraph <- function(
 	)
 
   # if there are unconnected vertex pairs, the function changes the distance to twice the maximum finite distance.
-  if (correct.inf & dist.method %in% c("shortest.paths", "mfpt")) D[D==Inf] <- correct.factor * max(D[D!=Inf])
+  if (correct.inf) D[D==Inf] <- correct.factor * max(D[D!=Inf])
   
   # change column names and row names to the names of the specified vertices
   if (nrow(D) == ncol(D)) dimnames(D) <- list(v, v) else rownames(D) <- v
