@@ -1,4 +1,4 @@
-Knet <- function(
+ Knet <- function(
   g, 
   nperm          =100, 
   dist.method    ="shortest.paths", 
@@ -7,6 +7,7 @@ Knet <- function(
   correct.factor =1.0,
   nsteps         =1000, 
   prob           =c(0, 0.05, 0.5, 0.95, 1),
+  only.pval      =F,
   parallel       =NULL
 ){
   # calculate the Knet function for a graph, along with permutations if required
@@ -79,6 +80,9 @@ Knet <- function(
       res[[attr]]$K.quan    <- NA
       res[[attr]]$pval      <- NA	
     }
+    
+    # if only the p-value is to be returned, replace the list with the pvalue 
+    if (only.pval) res[[attr]] <- res[[attr]]$pval
     
     message(" done")
   }

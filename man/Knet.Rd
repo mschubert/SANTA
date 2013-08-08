@@ -8,8 +8,8 @@ Compute the strength of clustering of high-weight vertices (hits) on a graph usi
 }
 \usage{
 Knet(g, nperm = 100, dist.method = "shortest.paths", vertex.attr = "pheno", 
-edge.attr = "distance", correct.factor=1, nsteps = 1000, 
-prob = c(0, 0.05, 0.5, 0.95, 1), parallel = NULL)
+edge.attr = "distance", correct.factor = 1, nsteps = 1000, 
+prob = c(0, 0.05, 0.5, 0.95, 1), only.pval = F, parallel = NULL)
 }
 \arguments{
   \item{g}{
@@ -35,6 +35,9 @@ An integer value, the number of bins into which the vertex pairs are put accordi
 }
   \item{prob}{
 A numeric vector, containing the quantiles to be calculated for the \code{Knet} permutations.
+}
+  \item{only.pval}{
+A logical value. If \code{TRUE}, then only the p-values for each vertex attribute are returned. 
 }
   \item{parallel}{  
 A numeric value or \code{NULL}. If parallel computing is possible, \code{parallel} can be used to split permutations over multiple cores. The \code{snow} package is used to manage the parallel computing. If \code{parallel=NULL} or parallel computing is not possible, then only one core is used. If a positive integer is input and parallel computing is possible, then the permutations are split over up to this many cores.

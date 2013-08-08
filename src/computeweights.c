@@ -1,34 +1,31 @@
 #include <R.h>
 #include <Rdefines.h>
 
-SEXP computeweights(SEXP Rb, SEXP Rweight, SEXP Rnvertices, SEXP Rdiam)
+SEXP computeweights(SEXP b, SEXP weight, SEXP Rnvertices, SEXP Rdiam)
 {
-    int i, nvertices, diam;
+    int i;
     
-    int *b;
-    b = INTEGER(Rb);
+    int nvertices = asInteger(Rnvertices);
+    int diam = asInteger(Rdiam);
     
-    double *weight;
-    weight = REAL(Rweight);
+    // create pointers to long vectors
+    int *pb = INTEGER(b);
+    double *pweight = REAL(weight);
     
-    Rnvertices = coerceVector(Rnvertices, INTSXP);
-    nvertices = INTEGER(Rnvertices)[0];
-    
-    Rdiam = coerceVector(Rdiam, INTSXP);
-    diam = INTEGER(Rdiam)[0];
-    
-    int tot = nvertices * nvertices;
+    // create results vector
     SEXP result;
     PROTECT(result = allocVector(REALSXP, nvertices * diam));
+    double *presult = REAL(result);
     
+        
     for (i = 0; i < nvertices * diam; i++) {
-        REAL(result)[i] = 0;
+        presult[i] = 0;
     }
     
-    for (i = 0; i < tot; i++) {
-        REAL(result)[(b[i] - 1) * nvertices + (i % nvertices)] += weight[i / nvertices];
+    for (i = 0; i < nvertices * nvertices; i++) {
+        presult[(pb[i] - 1) * nvertices + (i % nvertices)] += pweight[i / nvertices];
     }
     
     UNPROTECT(1);
-    return result;
+    return(result);
 }

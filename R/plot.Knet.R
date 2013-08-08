@@ -18,7 +18,7 @@ plot.Knet <- function(
     K.quan   <- x$K.quan
     AUK.obs  <- x$AUK.obs
     AUK.perm <- x$AUK.perm
-    g.max		 <- ncol(K.quan)-1
+    g.max	 <- ncol(K.quan)-1
     
     # plot 1
     if (nrow(K.quan) == 5) { 
