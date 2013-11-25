@@ -1,15 +1,15 @@
 Package: SANTA
 Type: Package
 Title: Spatial Analysis of Network Associations
-Version: 1.3.0
+Version: 1.3.1
 Date: 8 August 2013
 Author: Alex Cornish and Florian Markowetz
 Maintainer: Alex Cornish <a.cornish12@imperial.ac.uk>
-Imports: msm, snow
+Imports: Matrix, msm, snow
 Depends: R (>= 2.14), igraph
 Suggests: RUnit, BiocGenerics, org.Sc.sgd.db
 Description: This package provides methods for measuring the strength of association between a network and a phenotype. It does this by measuring clustering of the phenotype across the network. Vertices can also be individually ranked by their strength of association with high-weight vertices.  
 License: Artistic-2.0
 biocViews: NetworkAnalysis, NetworkEnrichment, Clustering
 LazyLoad: yes
-Packaged: 2013-03-23 16:02:35 UTC; alexcornish
+Packaged: 2013-11-25 15:18:06 UTC; alex

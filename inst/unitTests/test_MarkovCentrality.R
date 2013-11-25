@@ -1,19 +1,22 @@
 test_MarkovCentrality <- function() {
-  # setup
-  g <- graph.empty(7, directed=FALSE)
-  g <- add.edges(g, c(1, 2, 1, 3, 1, 4, 1, 5, 5, 6))
-  M <- MarkovCentrality(g)
-  
-  # test that MarkovCentrality returns correct relative centrality measures on a preset graph
-  checkEquals(M[1], max(M))
-  checkEquals(M[7], min(M))
-  checkEquals(M[5] > M[6], TRUE)
-  
-  # test that MarkovCentrality takes into account edge distances if specified
-  g <- set.edge.attribute(g, "edge.attr", value=c(0.1, 0.9, 0.5, 0.5, 0.5))
-  M.without.weights <- MarkovCentrality(g)
-  M.with.weights <- MarkovCentrality(g, edge.attr="edge.attr")
-  checkEquals(M.without.weights[2] - M.without.weights[3] < 1e-10, TRUE)
-  checkEquals(M.with.weights[2] > M.with.weights[4], TRUE)
-  checkEquals(M.with.weights[4] > M.with.weights[3], TRUE)
+    # setup main graph
+    g <- graph.empty(5, directed=F)
+    g <- add.edges(g, c(2,1, 2,3, 2,4))
+    
+    # test that the function resurts the correct relative centrality measures 
+    M <- MarkovCentrality(g)
+    checkTrue(M[2] > M[1])
+    checkTrue(M[1] - M[3] < 10e-10)
+    checkTrue(M[3] - M[4] < 10e-10)
+    checkTrue(M[4] > M[5])
+    
+    # test that MarkovCentrality takes into account edge distances if specified
+    edge.distances <- c(1, 2, 3)
+    edge.attr <- "distances"
+    ge <- set.edge.attribute(g, name=edge.attr, value=edge.distances)
+    M <- MarkovCentrality(ge, edge.attr=edge.attr)
+    checkTrue(M[2] > M[1])
+    checkTrue(M[1] > M[3])
+    checkTrue(M[3] > M[4])
+    checkTrue(M[4] > M[5])
 }

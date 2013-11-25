@@ -7,9 +7,10 @@ Rank vertices by their strength of association with high-weight vertices.
 Rank vertices by their strength of association with high-weight vertices using a modified version of Ripley's K-statistic. Vertex weights can either be binary or positive and continuous.
 }
 \usage{
-Knode(g, dist.method="shortest.paths", vertex.attr="pheno", edge.attr="distance", 
-correct.factor=1, nsteps=1000, only.Knode=TRUE, vertex.weight=TRUE, cluster.id=FALSE, 
-vertex.degree=TRUE, boncich.power=FALSE, markov.centr=FALSE)
+Knode(g, dist.method = "shortest.paths", vertex.attr = "pheno", edge.attr = "distance", 
+correct.factor = 1, nsteps = 1000, only.Knode = TRUE, vertex.weight = TRUE, 
+cluster.id = FALSE, vertex.degree = TRUE, boncich.power = FALSE, markov.centr = FALSE, 
+B = NULL, verbose = TRUE)
 }
 \arguments{
   \item{g}{
@@ -47,6 +48,12 @@ A logical value. If \code{boncich.power==TRUE} and \code{only.Knode==FALSE}, the
 }
   \item{markov.centr}{
 A logical value. If \code{markov.centr==TRUE} and \code{only.Knode==FALSE}, then the Markov centrality score of each vertex is returned.
+}
+  \item{B}{
+ A numerical matrix. A precomputed distance bin matrix for \code{g} output by the \code{BinGraph} function. If \code{NULL}, then B is computed by the \code{Knode} function. 
+}
+  \item{verbose}{
+A logical value. If \code{verbose==TRUE}, messages about the progress of the function are displayed. 
 }
 }
 \details{

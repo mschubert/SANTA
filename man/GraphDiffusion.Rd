@@ -7,7 +7,7 @@ Compute the distances between vertex pairs using a diffusion kernel-based method
 Using a diffusion kernel-based algorithm, compute the distance between vertex pairs in an undirected graph, with or without edge distances. This algorithm provides an alternative to the \code{shortest.paths} and \code{mfpt} measures of vertex pair distance.
 }
 \usage{
-GraphDiffusion(g, v=V(g), edge.attr=NULL, beta=1, correct.factor=1, correct.neg=TRUE)
+GraphDiffusion(g, v=V(g), edge.attr=NULL, beta=1, correct.neg=TRUE)
 }
 \arguments{
   \item{g}{
@@ -21,9 +21,6 @@ A string, the names of the edge attribute to be used as distances along the edge
 }
   \item{beta}{
 A numeric value, the probability that the lazy random walk will take each of the edges emanating from a vertex. 
-}
-  \item{correct.factor}{
-A numeric value, the factor by which the maximum measured distance is multiplied. 
 }
   \item{correct.neg}{
 A logical value. If \code{TRUE}, then negative edge distances are set to 0. 

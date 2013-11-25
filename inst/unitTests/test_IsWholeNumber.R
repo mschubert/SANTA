@@ -1,13 +1,13 @@
 test_IsWholeNumber <- function() {
   # test that IsWholeNumber correctly identifies 2 as being a whole number
-  checkEquals(SANTA:::IsWholeNumber(2), TRUE)
+  checkTrue(SANTA:::IsWholeNumber(2))
   
   # test that IsWholeNumber correctly identifies 2.5 as not being a whole number
-  checkEquals(SANTA:::IsWholeNumber(2.5), FALSE)
+  checkTrue(!SANTA:::IsWholeNumber(2.5))
   
   # test that IsWholeNumber correctly identifies 0 as being a whole number
-  checkEquals(SANTA:::IsWholeNumber(0), TRUE)
+  checkTrue(SANTA:::IsWholeNumber(0))
   
   # test that IsWholeNumber correctly identifies -2 as being a whole number
-  checkEquals(SANTA:::IsWholeNumber(-2), TRUE)
+  checkTrue(SANTA:::IsWholeNumber(-2))
 }

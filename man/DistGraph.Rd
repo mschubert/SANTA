@@ -7,27 +7,27 @@ Compute the vertex pair distance matrix of a graph.
 Compute the distances between pairs of vertices in a graph, using a shortest path, diffusion kernel, or mean first-passage time-based measure. 
 }
 \usage{
-DistGraph(g, v = V(g), edge.attr = NULL, 
-dist.method = c("shortest.paths", "diffusion", "mfpt"), correct.inf = TRUE, correct.factor=1)
+DistGraph(g, v = V(g), edge.attr = NULL,
+dist.method = c("shortest.paths", "diffusion", "mfpt"), correct.inf = TRUE, correct.factor = 1)
 }
 \arguments{
   \item{g}{
-An igraph object, the graph to work on. 
+An igraph object. The graph on which to work.
 }
   \item{v}{
-An igraph object or numeric vector, the vertices from which each distance is calculated. 
+An igraph object or numeric vector. The vertices from which each distance is calculated. 
 }
   \item{edge.attr}{
-A string, containing the name of the edge attribute to be used as distances along the edges. If left equal to \code{NULL}, then each edge is assumed to have a distance of 1. 
+A string. The name of the edge attribute to be used as distances along the edges. If left equal to \code{NULL}, then each edge is assumed to have a distance of 1. 
 }
   \item{dist.method}{
-A string, the method used to calculate the distance between each vertex pair. Can either be \code{shortest.paths}, \code{diffusion} or \code{mfpt}.
+A string. The method used to calculate the distance between each vertex pair. Can either be \code{shortest.paths}, \code{diffusion} or \code{mfpt}.
 }
   \item{correct.inf}{
 A logical value. If \code{TRUE}, then infinite vertex pair distances are replaced with distances equal to the maximum distance measured across the network, multiplied by \code{correct.factor}. If \code{FALSE}, then these distances are returned as \code{Inf}.
 }
   \item{correct.factor}{
-A numeric value, the factor by which the maximum measured distance is multiplied. 
+A numerical value. The factor by which the maximum measured distance is multiplied. 
 }
 }
 \details{

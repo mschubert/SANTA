@@ -9,7 +9,8 @@ Compute the strength of clustering of high-weight vertices (hits) on a graph usi
 \usage{
 Knet(g, nperm = 100, dist.method = "shortest.paths", vertex.attr = "pheno", 
 edge.attr = "distance", correct.factor = 1, nsteps = 1000, 
-prob = c(0, 0.05, 0.5, 0.95, 1), only.pval = F, parallel = NULL)
+prob = c(0, 0.05, 0.5, 0.95, 1), only.pval = F, parallel = NULL, B = NULL, 
+verbose = TRUE)
 }
 \arguments{
   \item{g}{
@@ -41,6 +42,12 @@ A logical value. If \code{TRUE}, then only the p-values for each vertex attribut
 }
   \item{parallel}{  
 A numeric value or \code{NULL}. If parallel computing is possible, \code{parallel} can be used to split permutations over multiple cores. The \code{snow} package is used to manage the parallel computing. If \code{parallel=NULL} or parallel computing is not possible, then only one core is used. If a positive integer is input and parallel computing is possible, then the permutations are split over up to this many cores.
+}
+  \item{B}{
+ A numerical matrix. A precomputed distance bin matrix for \code{g} output by the \code{BinGraph} function. If \code{NULL}, then B is computed by the \code{Knet} function. 
+}
+  \item{verbose}{
+A logical value. If \code{verbose==TRUE}, messages about the progress of the function are displayed. 
 }
 }
 \details{
