@@ -9,4 +9,8 @@ test_BinGraph <- function() {
     
     # test that function splits D correctly when D contains only whole numbers and the dist.method is not shortest.paths
     checkEquals(BinGraph(D2, dist.method="diffusion", nsteps=100), matrix(c(1, 10, 20, 40, 50, 60, 80, 90, 100), 3, 3))
+    
+    # test that the function handles continuous values of D correctly
+    D3 <- matrix(c(0, 0.7, 0.9, 0.7, 0, 7, 0.9, 7, 0), 3,3)
+    checkEquals(BinGraph(D3, dist.method="diffusion", nsteps=11), matrix(c(1, 2, 2, 2, 1, 11, 2, 11, 1), 3,3))
 }
