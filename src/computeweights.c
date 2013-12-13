@@ -9,14 +9,13 @@ SEXP computeweights(SEXP b, SEXP weight, SEXP Rnvertices, SEXP Rdiam)
     int diam = asInteger(Rdiam);
     
     // create pointers to long vectors
-    int *pb = INTEGER(b);
+    int *pb = INTEGER(PROTECT(b));
     double *pweight = REAL(weight);
     
     // create results vector
     SEXP result;
     PROTECT(result = allocVector(REALSXP, nvertices * diam));
     double *presult = REAL(result);
-    
         
     for (i = 0; i < nvertices * diam; i++) {
         presult[i] = 0;

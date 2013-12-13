@@ -71,8 +71,6 @@ If one vertex attribute is input, \code{Knet} is run on the single set of vertex
 \item{K.perm}{The Knet-function curve for each permutation of vertex weights. Equals \code{NA} if no permutations are completed.}
 \item{AUK.perm}{The area under the Knet-function curve (AUK) for each permutation of vertex weights. Equals \code{NA} if no permutations are completed.}
 \item{K.quan}{The quantiles for the permuted Knet-function curves. Equals \code{NA} if no permutations are completed.}
-\item{nodeK}{The Knode-function curve for each of the vertices using the observed set of vertex weights.}
-\item{nodeAUK}{The area under the Knode-function curve (AUK) for each of the vertices using the observed set of vertex weights.}
 \item{pval}{The p-value, calculated from a z-score derived from the observed and permuted AUKs. Equals \code{NA} if no permutations are completed.}
 }
 \references{

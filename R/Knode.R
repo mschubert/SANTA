@@ -16,25 +16,25 @@ Knode <- function(
 ) {  
     # rank the genes exhibiting the phenotype by Knode AUK score. Also produce and list a number of other score for each vertex
     
-    # check that vertex weights and edge distances are present and suitable. Convert if neccessary
-    g <- CheckAttributes(g, vertex.attr, edge.attr)
     
-    # if vertices do not have a name, add some
-    if (is.null(get.vertex.attribute(g, "name"))) g <- set.vertex.attribute(g, "name", value=as.character(1:vcount(g)))
+    # setup
+    g <- CheckAttributes(g, vertex.attr, edge.attr) # check that vertex weights and edge distances are present and suitable
+    nvertices <- as.integer(vcount(g))
+    if (is.null(get.vertex.attribute(g, "name"))) g <- set.vertex.attribute(g, "name", value=as.character(1:nvertices)) # if vertices do not have a name, add some
+    
     
     if (is.null(B)) {
-        # compute the vertex pair distances (D)
-        if (verbose) message("computing graph distance matrix...", appendLF=F)
-        D <- DistGraph(g=g, edge.attr=edge.attr, dist.method=dist.method, correct.inf=T, correct.factor=correct.factor) 
-        if (verbose) message(" done")
-        
-        # compute which bin each vertex pair distance falls into (B)
-        if (verbose) message("computing graph distance bins...", appendLF=F)
-        B <- BinGraph(D=D, dist.method=dist.method, nsteps=nsteps) 
-        if (verbose) message(" done")   
+        D <- DistGraph(g=g, edge.attr=edge.attr, dist.method=dist.method, correct.inf=T, correct.factor=correct.factor, verbose=verbose) # compute the vertex pair distances (D)
+        B <- BinGraph(D=D, dist.method=dist.method, nsteps=nsteps, verbose=verbose) # compute which bin each vertex pair distance falls into (B)
+        rm(D)
     } else {
-        if (!identical(dim(B), rep(vcount(g), 2))) stop("B is not of the correct dimensions")
+        if (!identical(dim(B), rep(nvertices, 2))) stop("B is not of the correct dimensions")
     }
+    
+    # convert to B a vector and compute the maximum of B
+    Bv <- as.integer(as.vector(B))
+    maxB <- as.integer(max(B))
+    rm(B)
     
     if (!only.Knode) {
         # if required, compute each of the additional graph stats
@@ -60,12 +60,17 @@ Knode <- function(
         attr.message <- if (length(vertex.attr) == 1) NULL else paste(" (", which(vertex.attr == attr), "/", length(vertex.attr), ")", sep="")
         if (verbose) message("computing the Knode scores of vertices using '", attr, "' as weights", attr.message, "...", appendLF=F)
         
+        # extract the vertex weights, set any missing weights to the mean
         vertex.weights <- get.vertex.attribute(g, attr)
-        nodeAUK        <- Kfct(B, vertex.weights, individual=T)$nodeAUK
+        vertex.weights[is.na(vertex.weights)] <- mean(vertex.weights, na.rm=T)
+        vertex.weights <- as.double(vertex.weights)
+        
+        # compute nodeAUKs
+        nodeAUK <- .Call("computenodeAUK", Bv, vertex.weights, nvertices, maxB)
         
         if (!only.Knode) {
-            res[[attr]] <- if (vertex.weight) cbind(nodeAUK, vertex.weights, data.frame(stats)) else cbind(nodeAUK, data.frame(stats)) # combine the Kfct results with the statistics
-            res[[attr]] <-res[[attr]][order(nodeAUK, runif(length(nodeAUK)), decreasing=T), ] # sort the data frame of Knode scores and statistics by Knode score
+            res[[attr]] <- if (vertex.weight) cbind(nodeAUK, vertex.weights, data.frame(stats)) else cbind(nodeAUK, data.frame(stats)) # combine the nodeAUKs results with the statistics
+            res[[attr]] <- res[[attr]][order(nodeAUK, runif(length(nodeAUK)), decreasing=T), ] # sort the data frame of Knode scores and statistics by Knode score
         } else {
             names(nodeAUK) <- get.vertex.attribute(g, "name")
             res[[attr]] <- data.frame(nodeAUK[order(nodeAUK, runif(length(nodeAUK)), decreasing=T)]) # sort the Knode scores

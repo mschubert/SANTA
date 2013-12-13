@@ -4,9 +4,11 @@ DistGraph <- function(
     edge.attr = NULL,
     dist.method = c("shortest.paths", "diffusion", "mfpt"), 
     correct.inf = TRUE,
-    correct.factor = 1
+    correct.factor = 1,
+    verbose = TRUE
 ) {
     # calculates a distance matrix for a graph using a specified method
+    if (verbose) message("computing graph distance matrix... ", appendLF=F)
     
     # if v is not supplied as an igraph object, convert
     if (class(v) != "igraph.vs") v <- AsiGraph(v, g)
@@ -27,5 +29,6 @@ DistGraph <- function(
     
     # change column names and row names to the names of the specified vertices
     if (nrow(D) == ncol(D)) dimnames(D) <- list(v, v) else rownames(D) <- v
+    if (verbose) message("done")
     D
 }

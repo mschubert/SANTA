@@ -7,8 +7,8 @@ Compute the vertex pair distance matrix of a graph.
 Compute the distances between pairs of vertices in a graph, using a shortest path, diffusion kernel, or mean first-passage time-based measure. 
 }
 \usage{
-DistGraph(g, v = V(g), edge.attr = NULL,
-dist.method = c("shortest.paths", "diffusion", "mfpt"), correct.inf = TRUE, correct.factor = 1)
+DistGraph(g, v = V(g), edge.attr = NULL, 
+dist.method = c("shortest.paths", "diffusion", "mfpt"), correct.inf = TRUE, correct.factor = 1, verbose = TRUE)
 }
 \arguments{
   \item{g}{
@@ -28,6 +28,9 @@ A logical value. If \code{TRUE}, then infinite vertex pair distances are replace
 }
   \item{correct.factor}{
 A numerical value. The factor by which the maximum measured distance is multiplied. 
+}
+  \item{verbose}{
+A logical value. If \code{verbose==TRUE}, messages about the progress of the function are displayed. 
 }
 }
 \details{

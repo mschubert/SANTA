@@ -1,10 +1,10 @@
 \name{Kfct}
 \alias{Kfct}
 \title{
-Function central to the \code{Knet} and \code{Knode} functions. 
+Compute statistics central to \code{Knet} and \code{Knode} functions. 
 }
 \description{
-This function is called by the \code{Knet} and \code{Knode} functions. It should not be called seperately. 
+Deprecated function. Will be removed in the next version of SANTA.
 }
 \usage{
 Kfct(B, vertex.weights, individual=TRUE)
@@ -22,8 +22,4 @@ Logical value. If \code{TRUE}, then the K and AUK is returned for each individua
 }
 \author{
 Alex Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
-}
-\seealso{
-\code{\link[SANTA:Knet]{Knet}}
-\code{\link[SANTA:Knode]{Knode}}
 }
