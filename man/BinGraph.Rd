@@ -7,7 +7,7 @@ Compute a distance bin matrix from a distance matrix.
 In order for \code{Knet} or \code{Knode} to be run on a graph, it is necessary to place the raw distances between each node pair into distance bins. The number and size of the bins that \code{BinGraph} places each distance in to depends on the maximum distance measured, the method used to measure the distance and the number of steps desired. 
 }
 \usage{
-BinGraph(D, dist.method, nsteps)
+BinGraph(D, dist.method, nsteps, verbose = TRUE)
 }
 \arguments{
   \item{D}{
@@ -18,6 +18,9 @@ A string. The method used to compute the distance between each vertex pair. Can 
 }
   \item{nsteps}{
 An integer value. Unless the distance method used is \code{shortest.paths} and every value in \code{D} is a whole number, \code{nsteps} determines the number of bins the distances are placed into.
+}
+  \item{verbose}{
+A logical value. If \code{verbose==TRUE}, messages about the progress of the function are displayed. 
 }
 }
 \details{

@@ -12,4 +12,4 @@ Description: This package provides methods for measuring the strength of associa
 License: Artistic-2.0
 biocViews: NetworkAnalysis, NetworkEnrichment, Clustering
 LazyLoad: yes
-Packaged: 2013-12-13 12:17:37 UTC; alex
+Packaged: 2013-12-13 12:39:21 UTC; alex
