@@ -24,13 +24,12 @@ SpreadHits <- function(
     
     # spread the hits across the graph, probability determined by distance from the start vertex
     if (is.null(D)) D <- DistGraph(g, edge.attr=edge.attr, dist.method=dist.method)
-    prob <- if (lambda > 0) lambda*exp(-lambda * D[start.vertex, ]) else rep(1, ncol(D))
+    prob <- if (lambda > 0) exp(lambda * (ncol(D) - rank(D[start.vertex, ]) + 1) / ncol(D)) else rep(1, ncol(D)) # ensure that the probabilities are derived from the ranked distance of each vertex
     if (sum(prob > 0) < h + 1) prob[prob == 0] <- min(prob[prob != 0])
     prob[as.numeric(start.vertex)] <- 0  
     
     # choose start.vertex and h-1 other vertices
-    sampled <- c(start.vertex, sample(as.character(V(g)), size=h-1, prob=prob))
-    sampled <- as.numeric(sampled)
+    sampled <- c(start.vertex, sample(as.numeric(V(g)), size=h-1, prob=prob))
     
     # add hits, pheno and color attributes
     hits[sampled] <- pheno[sampled] <- 1

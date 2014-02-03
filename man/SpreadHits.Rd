@@ -37,11 +37,7 @@ A pre-calculated numeric distance matrix.
 }
 }
 \details{
-\code{SpreadHits} can be used to add hits to a graph without hits, or replace hits on a graph with hits. The probability of a vertex being labelled as a hit depends on the distance it is from the starting vertex. The value of \code{lambda} denotes the shape of the probability distribution used to spread the hits. The greater the value of \code{lambda}, the greater the strength of hit clustering. The probability that vertex \code{i} is labelled a hit is proportional to:
-
-\deqn{P[i] \sim lambda*exp^{-lambda * d[start,i]}}{P[i] ~ lambda*exp^{-lambda * d[start,i]}}
-
-where \eqn{d[start,i]} is the distance between the start vertex and vertex i. 
+\code{SpreadHits} can be used to add hits to a graph without hits, or replace hits on a graph with hits. The probability of a vertex being labelled as a hit depends on its ranked distance from a randomly chosen or specified starting vertex. The value of \code{lambda} denotes the shape of the probability distribution used to spread the hits. The greater the value of \code{lambda}, the greater the strength of hit clustering. 
 
 Hits are denoted as 1 under the vertex attributes \code{hits} and \code{pheno}, while misses are denoted as 0. A color can also be chosen to highlight the hits when the graph is plotted. Misses are automatically coloured grey. 
 }
