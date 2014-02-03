@@ -23,16 +23,18 @@ CheckAttributes <- function(
                 missing.char <- is.na(vertex.weights)
                 vertex.weights[missing.char] <- F
             } else {
+                warning("non-numeric/non-logical vertex weights found and converted to numerals")
                 missing.char <- vertex.weights == "NA"
                 vertex.weights[missing.char] <- "0"     	
             }
             
             suppressWarnings(vertex.weights <- as.numeric(vertex.weights))
             if (sum(is.na(vertex.weights)) > 0) stop("unable to convert non-numeric vertex weights to numerals")
+            
             vertex.weights[missing.char] <- NA
             g <- remove.vertex.attribute(g, attr)
             g <- set.vertex.attribute(g, attr, value=vertex.weights)
-            warning("non-numeric vertex weights found and converted to numerals")
+            
         }
         
         # check that all vertex weights are greater or equal to 0. If not, return error

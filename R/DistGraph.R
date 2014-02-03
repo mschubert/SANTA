@@ -7,19 +7,16 @@ DistGraph <- function(
     correct.factor = 1,
     verbose = TRUE
 ) {
-    # calculates a distance matrix for a graph using a specified method
+    # compute the distance matrix for a graph using a specified method
+    
     if (verbose) message("computing graph distance matrix... ", appendLF=F)
-    
-    # if v is not supplied as an igraph object, convert
-    if (class(v) != "igraph.vs") v <- AsiGraph(v, g)
-    
-    # get edge weights
-    edge.weights <- if (is.null(edge.attr)) NULL else get.edge.attribute(g, edge.attr)
-    
+    if (class(v) != "igraph.vs") v <- AsiGraph(v, g) # if v is not an igraph object, convect
+    distances <- if (is.null(edge.attr)) NULL else get.edge.attribute(g, edge.attr)
     method <- match.arg(dist.method)
+    
+    # the distance matrix D contains a row for each vertex in v and a column for each vertex in g
     D <- switch(method,
-                # the distance matrices contain a column for each hit and a row for every vertex
-                shortest.paths = shortest.paths(g, v=v, weights=edge.weights),			
+                shortest.paths = shortest.paths(g, v=v, weights=distances),			
                 diffusion      = GraphDiffusion(g, v=v, edge.attr=edge.attr, correct.neg=T)$dist,
                 mfpt           = GraphMFPT(g, v=v, edge.attr=edge.attr, average.distances=T)
     )
@@ -28,7 +25,8 @@ DistGraph <- function(
     if (correct.inf) D[!is.finite(D)] <- correct.factor * max(D[is.finite(D)])
     
     # change column names and row names to the names of the specified vertices
-    if (nrow(D) == ncol(D)) dimnames(D) <- list(v, v) else rownames(D) <- v
+    if (is.null(rownames(D))) rownames(D) <- v$name
+    if (is.null(colnames(D))) colnames(D) <- V(g)$name
     if (verbose) message("done")
     D
 }

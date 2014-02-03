@@ -20,7 +20,7 @@ SpreadHits <- function(
     color <- rep("grey", nvertices)
     
     # randomly choose start vertex
-    if (is.null(start.vertex)) start.vertex <- sample(as.character(1:nvertices), 1)
+    if (is.null(start.vertex)) start.vertex <- sample(nvertices, 1)
     
     # spread the hits across the graph, probability determined by distance from the start vertex
     if (is.null(D)) D <- DistGraph(g, edge.attr=edge.attr, dist.method=dist.method)

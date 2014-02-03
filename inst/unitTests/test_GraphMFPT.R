@@ -1,41 +1,62 @@
 test_GraphMFPT <- function() {
-    # setup main graph
-    g <- graph.empty(5, directed=F)
-    g <- add.edges(g, c(2,1, 2,3, 2,4))
+    # TESTS 
+    # 1) returns matrix of dim 1,1 if networks with 1 vertex input
+    # 2) uses v vertex names (under the attribute name 'name') as row names if available
+    # 3) uses g vertex names (under the attribute name 'name') as column names if available
+    # 4) returns only the rows corresultsponding to v, in the order v was input
+    # 5) correctly incorperates edge weights
+    # 6) doesn't return negative distances
+    # 7) returns the correct results on a small test graph
     
-    # test that function results correct distances
-    D1 <- GraphMFPT(g, average.distances=F)
-    checkTrue(all(diag(D1) == 0))
-    checkEquals(D1[1, 2], 1, checkNames=F)
-    checkEquals(D1[3, 2], 1, checkNames=F)
-    checkEquals(D1[4, 2], 1, checkNames=F)
+    # setup
+    g.single <- graph.empty(1, directed=F)
     
-    # test that function assigns unconnected vertices infinite vertex distances
-    checkTrue(all(!is.finite(D1[1:4, 5])))
-    checkTrue(all(!is.finite(D1[5, 1:4])))
+    edge.attr <- "test.distances"
+    edges <- c(1,4, 1,8, 1,9, 1,10, 1,11, 2,5, 2,6, 2,9, 3,7, 3,10, 3,12, 4,2, 4,8, 4,11, 5,3, 5,6, 5,9, 6,9, 7,10, 7,11, 7,12, 8,11, 9,10, 10,12) 
+    distances <- rep(1, length(edges) / 2)
+    distances[c(2, 7, 13, 16, 18, 22)] <- 10 # move 8 and 6 away
+    g <- graph.empty(max(edges), directed=F)
+    g <- add.edges(g, edges)
+    g <- set.edge.attribute(g, edge.attr, value=distances)
+    g.unnamed <- g
+    g.named <- set.vertex.attribute(g, "name", value=paste("gene", 1:vcount(g), sep=""))
     
-    # test that function correctly averages reciprical distances only when specified
-    D2 <- GraphMFPT(g, average.distances=T)
-    checkIdentical(D2 + D2, D1 + t(D1))
-    checkTrue(!identical(D1, D2))
+    n.vertex.unconnected <- 10
+    g.unconnected <- graph.empty(n.vertex.unconnected, directed=F)
     
-    # test that function correctly takes into account edge distances if specified
-    edge.distances <- c(1, 2, 3)
-    edge.attr <- "distances"
-    ge <- set.edge.attribute(g, name=edge.attr, value=edge.distances)
-    D3 <- GraphMFPT(ge, edge.attr=edge.attr, average.distances=T)
-    checkTrue(D3[2, 1] < D3[2, 3])
-    checkTrue(D3[2, 3] < D3[2, 4])
+    v <- c(4,2,12)
     
-    # test that function returns a 1x1 matrix if the graph contains only 1 vertex
-    g1 <- graph.empty(1, directed=F)
-    D4 <- GraphMFPT(g1)
-    checkIdentical(as.integer(dim(D4)), as.integer(c(1, 1)))
-    checkEquals(D4[1, 1], 0, checkNames=F)
     
-    # test that the function works on a graph with vertex names
-    vertex.names <- paste("vertex", 1:vcount(g), sep="")
-    gn <- set.vertex.attribute(g, "name", value=vertex.names)
-    D5 <- GraphMFPT(gn)
+    # run function
+    results <- list()
+    results[[1]] <- GraphMFPT(g.single) # 1 vertex
+    results[[2]] <- GraphMFPT(g.unnamed) # >1 vertex, v = V(g), no vertex names
+    results[[3]] <- GraphMFPT(g.named) # >1 vertex, v = V(g), vertex names
+    results[[4]] <- GraphMFPT(g.named, v=v) # >1 vertex, v = subset, vertex names
+    results[[5]] <- GraphMFPT(g.named, edge.attr=edge.attr) # >1 vertex, v = V(g), no vertex name, edge weights
+    results[[6]] <- GraphMFPT(g.unconnected) # unconnected network
+    
+    
+    # conduct tests
+    checkTrue(all(dim(results[[1]]) - c(1, 1) < 10e-10)) # 1
+    
+    checkTrue(is.null(rownames(results[[2]]))) # 2
+    checkIdentical(rownames(results[[3]]), V(g.named)$name) # 2
+    checkIdentical(rownames(results[[4]]), V(g.named)$name[v]) # 2
+    
+    checkTrue(is.null(colnames(results[[2]]))) # 3
+    checkIdentical(colnames(results[[3]]), V(g.named)$name) # 3
+    checkIdentical(colnames(results[[4]]), V(g.named)$name) # 3
+    
+    checkIdentical(results[[4]], results[[3]][v, ]) # 4
+    
+    checkTrue(all(c(8, 6) %in% tail(order(results[[5]][1, ]), 2))) # 5
+    
+    for (result in results) checkEquals(sum(result < 0), 0) # 6
+    
+    for (result in results[c(2, 3)]) {
+        checkTrue(all(c(1, 4, 8, 11) %in% head(order(result[8, ]), 4))) # 7
+        checkTrue(all(c(2, 5, 6, 9) %in% head(order(result[6, ]), 4))) # 7
+        checkTrue(all(c(3, 7, 10, 12) %in% head(order(result[12, ]), 4))) # 7
+    }
 }
-

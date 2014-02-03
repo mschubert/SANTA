@@ -7,18 +7,21 @@ GraphDiffusion <- function(
 ) { 
     # calculates the diffusion distance using the diffusion kernel method
     # Diffusion Kernels on Graphs and Other Discrete Structures, Kondor and Lafferty, 2002
+    # a list containing the numeric graph kernel matrix and the named numeric distance matrix is returned
     
     if (class(v) != "igraph.vs") v <- AsiGraph(v, g) # if v is not an igraph-class object, convert
-    if (vcount(g) == 1) return(list(kernel=matrix(0, 1, 1), dist=matrix(0, 1, 1))) # if only a single vertex is contained within the graph, return a single cell matrix
-    
-    # modify the network distances, so that smaller distances produce greater chances of movement along the edge
+    res.dimnames <- list(v$name, V(g)$name) 
+    if (vcount(g) == 1) return(list(kernel=matrix(0, 1, 1, dimnames=res.dimnames), dist=matrix(0, 1, 1, dimnames=res.dimnames))) # if only a single vertex is contained within the graph, return a single cell matrix
+
     if (!is.null(edge.attr)) {
-        edge.weights <- get.edge.attribute(g, name=edge.attr)
-        g <- set.edge.attribute(g, name="edge.distances.inverted", value=max(edge.weights) - edge.weights + min(edge.weights))
-        adj  <- get.adjacency(g, attr="edge.distances.inverted", sparse=T, type="both")
-    } else {
-        adj  <- get.adjacency(g, attr=NULL, sparse=T, type="both")
+        # if an attribute name containing the edge distances is supplied, convert to weights through inversion
+        edge.distances <- get.edge.attribute(g, edge.attr)
+        edge.weights <- max(edge.distances) - edge.distances + min(edge.distances)
+        g <- set.edge.attribute(g, name=edge.attr, value=edge.weights)
     }
+    
+    # obtain the sparse unamed adjacency matrix
+    adj <- get.adjacency(g, attr=edge.attr, names=F, sparse=T, type="both")
     
     # compute the diffusion kernal
     H <- adj - Diagonal(x=apply(adj, 1, sum))
@@ -32,9 +35,12 @@ GraphDiffusion <- function(
         D2[D2 < 0] <- 0
     }
     D <- sqrt(D2)
+    
+    # select only the rows corresponding to v
     D <- as.matrix(D[v, ])
     K <- as.matrix(K[v, ])
-    rownames(D) <- v
+    dimnames(D) <- res.dimnames
     
     list(kernel=K, dist=D)
 }
+
