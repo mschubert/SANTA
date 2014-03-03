@@ -14,7 +14,6 @@ SEXP computenetK_fewzeros(SEXP B, SEXP vw, SEXP n_verticesR, SEXP maxBR)
     int maxB = asInteger(maxBR);
     int *p_B = INTEGER(PROTECT(B)); // create pointer to the B vector
     double *p_vw = REAL(PROTECT(vw)); // create pointer to the vertex weights 
-   
     int i;
     double mean_vw, normalization_c; // mean_vw: mean vertex weight. normalization_c: the normalization character. 
     double *p_nodeS, *p_netK, *p_adjusted_vw; // p_adjusted_vw: pointer to the adjusted vertex weights 
@@ -25,12 +24,12 @@ SEXP computenetK_fewzeros(SEXP B, SEXP vw, SEXP n_verticesR, SEXP maxBR)
     mean_vw = mean_vw / n_vertices;
     
     // adjust the vertex weights, by subtracting the mean vertex weight from each
-    p_adjusted_vw = R_alloc(n_vertices, sizeof(double));
+    p_adjusted_vw = malloc(sizeof(double) * n_vertices);
     for (i = 0; i < n_vertices; i++) p_adjusted_vw[i] = p_vw[i] - mean_vw;
 
     // create nodeS and cycle through B, adding adjusted weights to nodeS
-    p_nodeS = R_alloc(n_vertices * maxB, sizeof(double));
-    memset(p_nodeS, 0, n_vertices * maxB * sizeof(double));
+    p_nodeS = malloc(sizeof(double) * n_vertices * maxB);
+    memset(p_nodeS, 0, sizeof(double) * n_vertices * maxB);
     for (i = 0; i < n_vertices * n_vertices; i++) p_nodeS[(p_B[i] - 1) * n_vertices + (i % n_vertices)] += p_adjusted_vw[i / n_vertices];
     
     // compute cumulative weights
@@ -46,6 +45,8 @@ SEXP computenetK_fewzeros(SEXP B, SEXP vw, SEXP n_verticesR, SEXP maxBR)
     normalization_c = 2 / (mean_vw * mean_vw * n_vertices * n_vertices);
     for (i = 0; i < maxB; i++) p_netK[i] = p_netK[i] * normalization_c;
     
+    free(p_adjusted_vw);
+    free(p_nodeS);
     UNPROTECT(3);
     return(netK);
 }

@@ -27,7 +27,7 @@ A logical value. If \code{verbose==TRUE}, messages about the progress of the fun
 If the graph for which \code{D} was computed contains only integer edge weights and if the \code{shortest.paths} distance measure was used to compute vertex pair distances, then it will be the case that D consists only of integers. If this is the case, then the values of \code{D} can be placed into bins of size 1, as smaller bins sizes would provide no additional information.
 }
 \value{
-A numerical matrix with the same dimensions as \code{D}. The values represent the distance bin that each vertex pair is placed into. 
+A integer matrix with the same dimensions as \code{D}. The values represent the distance bin that each vertex pair is placed into. 
 }
 \author{
 Alex Cornish \email{a.cornish12@imperial.ac.uk}

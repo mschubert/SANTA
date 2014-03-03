@@ -1,0 +1,4 @@
+SANTA 1.3.10 (2014-03-03)
+---------------------------
+NOTES: 
+	- Fixed minor memory leak in the Knet function. 
