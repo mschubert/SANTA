@@ -57,7 +57,8 @@ Knet <- function(
         
         # extract vertex weights 
         vertex.weights <- get.vertex.attribute(g, attr)
-        vertex.weights[is.na(vertex.weights)] <- 0
+        vertex.weights.is.na <- is.na(vertex.weights) # don't permute the NA values
+        vertex.weights[vertex.weights.is.na] <- 0
         vertex.weights <- as.double(vertex.weights)
         
         # determine whether it is more efficient to use the .c code that removes rows (manyzeros) or not (fewzeros)
@@ -71,11 +72,11 @@ Knet <- function(
         if (!is.null(nperm) & nperm > 0) {
             if (is.null(parallel)) {
                 # run permutations without parallel computing
-                res[[attr]]$K.perm <- sapply(1:nperm, function(i) .Call(c.function.to.use, Bv, sample(vertex.weights), nvertices, maxB)) 
+                res[[attr]]$K.perm <- sapply(1:nperm, function(i) .Call(c.function.to.use, Bv, Shuffle(vertex.weights, ignore=vertex.weights.is.na), nvertices, maxB)) 
             } else {
                 # run permutations with parallel computing
                 clusterExport(cl, "vertex.weights", envir=environment())
-                res[[attr]]$K.perm <- parSapply(cl, 1:nperm, function(i) .Call(c.function.to.use, Bv, sample(vertex.weights), nvertices, maxB))
+                res[[attr]]$K.perm <- parSapply(cl, 1:nperm, function(i) .Call(c.function.to.use, Bv, Shuffle(vertex.weights, ignore=vertex.weights.is.na), nvertices, maxB))
             }
             
             # calculate the quantiles, AUK and p-values (through the z-score) for the permutations
