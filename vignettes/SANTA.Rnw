@@ -188,9 +188,97 @@ where $n$ is the number of steps taken and $f^{(n)}_{a,b}$ is the probability th
 
 
 
-
-\section{Case study I - Using \Knet to investigate the re-wiring of a cell undergoing DNA damage}
+\section{Case study 1 - SANTA successfully identifies clustering on simulated networks}
 \label{sec:case_1}
+
+In order to demonstrate how the \knet function can be used to measure the clustering of hits on a network, we will simulate a network, apply clusters of hits of different clustering strengths to the network and use the \knet function to measure the strength of clustering.\\ 
+
+We will use the Barabasi-Albert model of preferential attachment to simulate the networks, as it has been observed that this methods produced networks with attributes similar to many real-world networks. A network of 500 vertices is both large enough to contain clusters of hits of different strengths, while small enough to quickly run a large number of trails upon. In the Barabasi-Albert model, vertices are added stepwise and connected to previously-added according to a probability distribution based upon the degree of the previously added vertices. Each new vertex is connected to $m$ previously-added vertices. A value of $m=2$ creates a moderately-dense network. 
+
+<<echo=true>>=
+require(SANTA)
+
+# generate the simulated network
+g <- barabasi.game(n=500, m=2, directed=F) 
+@
+
+A cluster of hits is simulated by first randomly choosing a seed vertex. All other vertices within the network are then ranked by their distance to the seed vertex. The distance can be measured using any of the previosly described distance metrics (shortest paths, diffusion kernel and MFPT). In this example, we will use the shortest paths metric, as it is the quickest to run, but the code below can be easily rerun with the alternative metrics and will produce similar results. 
+
+<<echo=true>>=
+# measure the distance between pairs of vertices in g
+dist.method <- "shortest.paths"
+D <- DistGraph(g, dist.method=dist.method, verbose=F) 
+B <- BinGraph(D, dist.method=dist.method, verbose=F) # sort the distances into bins
+@
+
+Next, we will generate clusters of hits and measure the clustering strength using the \Knet function. The $s$ vertices positioned closest to the seed vertex form the sample set. From this set, 5 vertices are randomly sampled to form the hit set. The size of the hit set needs to be small compared to the number of vertices in the network. Increasing the value of $s$ decreases the strength of the clustering. We will test 5 different values of $s$ in order to simulate different clustering strengths. A value of $s$ equal to the total number of vertices in the network produces a hit set containing vertices randomly selected from the entire network. For each value of $s$, we will conduct 10 trials. However, the number of trails completed can be increased. 
+
+<<echo=true>>=
+cluster.size <- 5
+s.to.use <- c(10, 20, 50, 100, 500)
+n.trials <- 10
+pvalues <- matrix(0, n.trials, length(s.to.use), dimnames=list(NULL, as.character(s.to.use)))
+
+# measure the strength of clustering of a generated hit set for each value of s for a number of trials
+for (s in s.to.use) {    	
+	for (i in 1:n.trials) {
+        # generate the hit set
+	    seed.vertex <- sample(vcount(g), 1) # identify a seed node at random
+        sample.set <- order(D[seed.vertex, ])[1:s]
+        hit.set <- sample(sample.set, cluster.size)
+    
+		# measure the stength of association between the simulated network and the hit set
+		g <- set.vertex.attribute(g, name="hits", value=as.numeric(1:vcount(g) %in% hit.set)) # apply the hit set to g
+		pvalues[i, as.character(s)] <- Knet(g, nperm=100, dist.method=dist.method, vertex.attr="hits", B=B, verbose=F)$pval
+	}
+}
+@
+
+Figure~\ref{fig:simulation_plot} contains the results of the simulation study. The \Knet function correctly measures more significant clustering for sets of hits created using smaller values of $s$.
+
+<<echo=false, label=simulation_plot, include=FALSE>>= 
+boxplot(-log10(pvalues), xlab="cutoff", ylab="-log10(p-value)")
+@
+
+\begin{figure}[H]
+\begin{center}
+<<label=fig1, fig=TRUE, echo=FALSE>>=
+<<simulation_plot>>
+@
+\end{center}
+\caption{The strength of clustering as measured by \Knet of simulated clusters of hits of different strength on the simulated network over multiple trials.}
+\label{fig:simulation_plot}
+\end{figure}
+
+
+
+
+
+
+
+
+
+\section{Case study 2 - Comparing Knet to Compactness}
+\label{sec:case_2}
+
+Glaab et al. define the compactness score as the mean distance between pais of vertices belonging to a set on a network. By permuting the vertices belonging to the set and comparing the observed compactness score to the permuted compactness scores, this score can be adapted to measure the strength of association between a vertex set and a network, much like \Knet. However, unlike \Knet, the adapted compactness score cannot be applied to continous distributions of vertex weights and does not incorperate vertex degree when measuring the significance of association. This is demonstrated below. 
+
+<<echo=true>>=
+# create network
+@
+
+# plot the different network vertex weight distributions
+
+<<echo=true>>=
+# meausre the strength of association using Knet and Compactness
+@
+
+
+
+
+
+\section{Case study 4 - Using \Knet to investigate the re-wiring of a cell undergoing DNA damage}
+\label{sec:case_4}
 
 This section will demonstrate how the \santa \Knet function can be used to measure the clustering of high-weight vertices on a network and thereby quantify the strength of association between a network and a phenotype.  \\
 
@@ -199,7 +287,6 @@ Bandyopadhyay et al. mapped genetic interaction (GI) networks in yeast under nor
 We will now load the \santa package and two data frames containing the interactions within the networks. Lists of edges, along with associated scores, can be converted into \santa-compatible graphs (\texttt{igraph} objects) using the \texttt{graph.data.frame} function contained within the \texttt{igraph} package.  
 
 <<echo=true>>=
-library(SANTA)
 data(treated.dataframe)
 data(untreated.dataframe)
 g.treated <- graph.data.frame(treated.dataframe, directed=FALSE )
@@ -300,8 +387,8 @@ The left-hand plots display the the observed curve in red and the quantiles of t
 
 
 
-\section{Case study II - Using \Knode to prioritise genes for follow-up functional studies}
-\label{sec:case_2}
+\section{Case study 8 - Using \Knode to prioritise genes for follow-up functional studies}
+\label{sec:case_8}
 
 This section will demonstrate how the \santa \Knode function can be used to rank vertices in a network by their respective strength of association with high-weight vertices present on the network. \\
 
@@ -310,7 +397,7 @@ The GO database contains the largest number of gene-function annotation currentl
 We will use a GI network used in the previous section \cite{Bandyopadhyay2010} to rank unannotated genes by their likely involvement in the \emph{Response to DNA Damage Stimulus} function  \cite{GeneOntology2000}. We will now load the \santa library and a data frame containing the edges from the MMS-treated (DNA-damaged) network and create a \santa-compatible graph.\\
 
 <<echo=true>>=
-library(SANTA)
+require(SANTA)
 data(treated.dataframe)
 g.treated <- graph.data.frame(treated.dataframe, directed=FALSE)
 @
