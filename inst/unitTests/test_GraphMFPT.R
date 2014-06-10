@@ -11,13 +11,13 @@ test_GraphMFPT <- function() {
     # setup
     g.single <- graph.empty(1, directed=F)
     
-    edge.attr <- "test.distances"
+    edge.attr.weight <- "test.weights"
     edges <- c(1,4, 1,8, 1,9, 1,10, 1,11, 2,5, 2,6, 2,9, 3,7, 3,10, 3,12, 4,2, 4,8, 4,11, 5,3, 5,6, 5,9, 6,9, 7,10, 7,11, 7,12, 8,11, 9,10, 10,12) 
-    distances <- rep(1, length(edges) / 2)
-    distances[c(2, 7, 13, 16, 18, 22)] <- 10 # move 8 and 6 away
+    weights <- rep(1, length(edges) / 2)
+    weights[c(2, 7, 13, 16, 18, 22)] <- 0.1 # move 8 and 6 away
     g <- graph.empty(max(edges), directed=F)
     g <- add.edges(g, edges)
-    g <- set.edge.attribute(g, edge.attr, value=distances)
+    g <- set.edge.attribute(g, edge.attr.weight, value=weights)
     g.unnamed <- g
     g.named <- set.vertex.attribute(g, "name", value=paste("gene", 1:vcount(g), sep=""))
     
@@ -33,7 +33,7 @@ test_GraphMFPT <- function() {
     results[[2]] <- GraphMFPT(g.unnamed) # >1 vertex, v = V(g), no vertex names
     results[[3]] <- GraphMFPT(g.named) # >1 vertex, v = V(g), vertex names
     results[[4]] <- GraphMFPT(g.named, v=v) # >1 vertex, v = subset, vertex names
-    results[[5]] <- GraphMFPT(g.named, edge.attr=edge.attr) # >1 vertex, v = V(g), no vertex name, edge weights
+    results[[5]] <- GraphMFPT(g.named, edge.attr.weight=edge.attr.weight) # >1 vertex, v = V(g), no vertex name, edge weights
     results[[6]] <- GraphMFPT(g.unconnected) # unconnected network
     
     
