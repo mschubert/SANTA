@@ -1,30 +1,34 @@
 \name{BinGraph}
 \alias{BinGraph}
 \title{
-Compute a distance bin matrix from a distance matrix.
+Compute a distance bin matrix from a distance matrix
 }
 \description{
-In order for \code{Knet} or \code{Knode} to be run on a graph, it is necessary to place the raw distances between each node pair into distance bins. The number and size of the bins that \code{BinGraph} places each distance in to depends on the maximum distance measured, the method used to measure the distance and the number of steps desired. 
+In order for the \code{Knet} or \code{Knode} functions to be run on a network, it is necessary to place the raw distances between each vertex pair into descreet distance bins, as the functions are unable to handle continuous distributions of distances. This is done automatically within the \code{Knet} and \code{Knode} functions, but can also be done separately using \code{BinGraph}. 
 }
 \usage{
-BinGraph(D, dist.method, nsteps, verbose = TRUE)
+BinGraph(D, nsteps=1000, equal.bin.fill=TRUE, verbose=TRUE)
 }
 \arguments{
   \item{D}{
-A numerical matrix. The distance matrix output by \code{DistGraph}.
-}
-  \item{dist.method}{
-A string. The method used to compute the distance between each vertex pair. Can be either \code{shortest.paths}, \code{diffusion} or \code{mfpt}.
+A numerical matrix. A distance matrix output by \code{DistGraph}.
 }
   \item{nsteps}{
-An integer value. Unless the distance method used is \code{shortest.paths} and every value in \code{D} is a whole number, \code{nsteps} determines the number of bins the distances are placed into.
+An integer value. The desired number of bins across which the distances are to be split. If there are too few unique distances to fill each bin, then fewer bins are retured. 
+}
+  \item{equal.bin.fill}{
+A logical value. If \code{TRUE}, then the function attempts to fill each bin with an equal number of vertex pairs.
 }
   \item{verbose}{
-A logical value. If \code{verbose==TRUE}, messages about the progress of the function are displayed. 
+A logical value. If \code{TRUE}, messages about the progress of the function are displayed. 
 }
 }
 \details{
-If the graph for which \code{D} was computed contains only integer edge weights and if the \code{shortest.paths} distance measure was used to compute vertex pair distances, then it will be the case that D consists only of integers. If this is the case, then the values of \code{D} can be placed into bins of size 1, as smaller bins sizes would provide no additional information.
+In order for the \code{Knet} or \code{Knode} functions to be run, the vertex pair distances (as computed by \code{DistGraph}) but be split into bins. This is done as part of the \code{Knet} or \code{Knode}. However, this step is often slow for large networks and therefore the \code{BinGraph} function is provided separately, in order to avoid repeat computation. 
+
+Each vertex pair is placed into a bin, either ranging from 1 to \code{nsteps}, or from 1 to the number of unique distances. 
+
+If \code{equal.bin.fill} is \code{FALSE}, then the bin each vertex pair is placed into is directly proportional to the largest vertex pair distance. For example, if the distance between the pair is 25\% of the largest distance and \code{nsteps} equals \code{100}, then the vertex pair will be placed into bin \code{25}. However, this can create problems when there are a small number of edges with especially large distances, as this can result in the majority of vertex pairs being placed into a small number of bins. This can reduce the effectiveness of the \code{Knet} and \code{Knode} functions. Therefore, when \code{equal.bin.fill} is \code{TRUE}, the function attempts to fill each bin with an equal number of vertex pairs. If there are a large number of tied distances, then the bins may not be filled equally. 
 }
 \value{
 A integer matrix with the same dimensions as \code{D}. The values represent the distance bin that each vertex pair is placed into. 
@@ -33,21 +37,21 @@ A integer matrix with the same dimensions as \code{D}. The values represent the 
 Alex Cornish \email{a.cornish12@imperial.ac.uk}
 }
 \seealso{
-\code{\link[SANTA:DistGraph]{DistGraph}},
+\code{\link[SANTA:DistGraph]{DistGraph}}
 }
 \examples{
-# Create a graph and calculate the distance matrix using the shortest paths measure
-# Place the distances into distance bins. 
-g1 <- CreateGraph(n=6, type="barabasi")
+# create network and calculate the distance matrix using the shortest paths measure
+g1 <- barabasi.game(6, directed=FALSE)
 plot(g1, layout=layout.fruchterman.reingold)
 D1 <- DistGraph(g1, dist.method="shortest.paths")
-BinGraph(D1, dist.method="shortest.paths", nsteps=100)
+# place the distances into distance bins
+BinGraph(D1, nsteps=100)
 
-# Create a graph, assign edge distances and calculate the distance matrix using the 
-# diffusion kernel-based measure. Place the distances into distance bins
-g2 <- CreateGraph(n=6, type="erdos.renyi")
+# create network and calculate the distance matrix using diffusion kernel-based measure
+g2 <- erdos.renyi.game(6, p.or.m=0.5, directed=FALSE)
 g2 <- set.edge.attribute(g2, name="distance", value=runif(ecount(g2)))
 plot(g2, layout=layout.fruchterman.reingold)
+# place the distances into distance bins
 D2 <- DistGraph(g2, dist.method="diffusion", edge.attr="distance")
-BinGraph(D2, dist.method="diffusion", nsteps=100)
+BinGraph(D2, nsteps=100)
 }

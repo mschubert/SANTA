@@ -1,21 +1,21 @@
 Knet <- function(
     g, 
-    nperm = 100, 
-    dist.method = "shortest.paths", 
-    vertex.attr = "pheno",
-    edge.attr = "distance",
-    correct.factor = 1,
-    nsteps = 1000, 
-    prob = c(0, 0.05, 0.5, 0.95, 1),
-    only.pval = F,
-    parallel = NULL,
-    B = NULL,
-    verbose = TRUE
+    nperm=100, 
+    dist.method=c("shortest.paths", "diffusion", "mfpt"), 
+    vertex.attr="pheno",
+    edge.attr=NULL,
+    correct.factor=1,
+    nsteps=1000, 
+    prob=c(0, 0.05, 0.5, 0.95, 1),
+    parallel=NULL,
+    B=NULL,
+    verbose=TRUE
 ){
     # calculate the Knet function for a graph, along with permutations if required
     
     # check that vertex weights and edge distances are present and suitable. Convert if neccessary
-    g <- CheckAttributes(g, vertex.attr, edge.attr)
+    dist.method <- match.arg(dist.method)
+    g <- CheckAttributes(g, vertex.attr, edge.attr, verbose)
     
     # the results are saved in a list with an entry for each vertex.attr. Done even if only 1 vertex.attr supplied
     tmp        <- vector("list", 6)
@@ -27,8 +27,8 @@ Knet <- function(
     
     if (is.null(B)) {
         # compute B and D
-        D <- DistGraph(g=g, edge.attr=edge.attr, dist.method=dist.method, correct.inf=T, correct.factor=correct.factor, verbose=verbose) 
-        B <- BinGraph(D=D, dist.method=dist.method, nsteps=nsteps, verbose=verbose) 
+        D <- DistGraph(g, edge.attr=edge.attr, dist.method=dist.method, correct.inf=T, correct.factor=correct.factor, verbose=verbose) 
+        B <- BinGraph(D, nsteps=nsteps, verbose=verbose) 
         rm(D)
     } else {
         # check that B is of the correct dimensions
@@ -42,7 +42,6 @@ Knet <- function(
     
     # if parallel computing is to be used, set up a cluster
     if (!is.null(parallel)) {
-        if (!IsWholeNumber(parallel)) stop("Argument 'parallel' is not a whole number")
         if (verbose) message("setting up cluster of size ", parallel, "...", appendLF=F)
         cl <- makeCluster(parallel, type="SOCK", verbose=F)		
         clusterExport(cl, list("Bv", "nvertices", "maxB"), envir=environment())
@@ -87,10 +86,7 @@ Knet <- function(
             # if no permutations are run, permutation-related statistics are returns equal to NA
             res[[attr]][c("K.perm", "AUK.perm", "K.quan", "pval")] <- NA
         }
-        
-        # if only the p-value is to be returned, replace the list with the pvalue 
-        if (only.pval) res[[attr]] <- res[[attr]]$pval
-        
+         
         if (verbose) message(" done")
     }
     

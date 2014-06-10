@@ -1,18 +1,14 @@
-importFrom(msm, rtnorm)
-import(igraph, Matrix, snow)
+import(igraph, Matrix, snow, stringer)
 
 export(
 	BinGraph,
-	CheckAttributes,
-	CreateGraph, 
 	CreateGrid, 
+	Compactness,
 	DistGraph, 
 	GraphDiffusion, 
 	GraphMFPT,
-	Kfct,
 	Knet, 
 	Knode, 
-	MarkovCentrality, 
 	plot.Knet, 
 	SpreadHits
 )

@@ -1,16 +1,12 @@
 Compactness <- function(
-    # network parameters
     g, 
-    nperm = 100, 
-    dist.method = c("shortest.paths", "diffusion", "mfpt"), 
-    vertex.attr = "pheno",
-    edge.attr = "distance", # an attribute containing the edge distance
-
-    # misc parameters
-    correct.factor = 1,
-    only.pval = F,
-    D = NULL,
-    verbose = T 
+    nperm=100, 
+    dist.method=c("shortest.paths", "diffusion", "mfpt"), 
+    vertex.attr="pheno",
+    edge.attr="distance", # an attribute containing the edge distance
+    correct.factor=1,
+    D=NULL,
+    verbose=T 
 ) {
     # use the compactness method to measure the strength of association between a gene set and a network
     # this method is based upon the PathExpand method by Glaab et al. 
@@ -50,9 +46,6 @@ Compactness <- function(
             
             # use the z-test to produce a p-value
             res[[attr]][["pval"]] <-  pnorm((res[[attr]][["score.obs"]] - mean(res[[attr]][["score.perm"]])) / sd(res[[attr]][["score.perm"]]), lower.tail=T) 
-            
-            # if only the p-value is to be returned, replace the list with the p-value 
-            if (only.pval) res[[attr]] <- res[[attr]][["pval"]]
         }
     }
     

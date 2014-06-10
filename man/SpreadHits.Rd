@@ -1,63 +1,76 @@
 \name{SpreadHits}
 \alias{SpreadHits}
 \title{
-Spread hits across a graph.
+Spread hits across a network in one or more clusters
 }
 \description{
-Spread hits across a graph using an exponential probability distribution related to the distance of each vertex from the start vertex. 
+Spread hits across a network in one or more clusters using an exponential probability distribution related to the distance of each vertex from a seed vertex. 
 }
 \usage{
-SpreadHits(g, h = 10, lambda = 1, dist.method = "shortest.paths", 
-edge.attr = NULL, start.vertex = NULL, hit.color = "red", D = NULL)
+SpreadHits(g, h, clusters=1, distance.cutoff=3, lambda=1, 
+dist.method=c("shortest.paths", "diffusion", "mfpt"), 
+edge.attr=NULL, hit.color="red", D=NULL, attempts=1000, verbose=TRUE)
 }
 \arguments{
   \item{g}{
-An igraph object, the graph to work on.
+An igraph object. The network to work on.
 }
   \item{h}{
-An integer value, the number of hits to be added to the graph.
+An integer value. The number of hits in each cluster.
+}
+  \item{clusters}{
+An integer value. The number of clusters to add the network. 
+}
+  \item{distance.cutoff}{
+An integer value. The minimum distance between the seed vertex of each cluster. 
 }
   \item{lambda}{
-A numeric value, the strength of hit clustering. If \code{lambda=0}, then the hits are randomly distributed. If \code{lambda>0}, then the hits are clustered. The greater the value of \code{lambda}, the greater the strength of the hit clustering. 
+A numeric value. The strength of hit clustering. If \code{lambda=0}, then the hits are randomly distributed. If \code{lambda>0}, then the hits are clustered. The greater the value of \code{lambda}, the greater the strength of the hit clustering. 
 }
   \item{dist.method}{
-A string, the method used to calculate the distance between each vertex and the start vertex. Can either be \code{shortest.paths}, \code{diffusion} or \code{mfpt}. 
+A string. The method used to compute the distance between each vertex and the seed vertex. 
 }
   \item{edge.attr}{
-A string, containing the name of the edge attribute to be used as distances along the edges. If left equal to \code{NULL}, then each edge is assumed to have a distance of 1.
-}
-  \item{start.vertex}{
-An igraph object, containing the start vertex. 
+A string. The name of the edge attribute to be used as distances along the edges. If left equal to \code{NULL}, then each edge is assumed to have a distance of 1. Smaller edge distances denote stronger interactions between vertex pairs.
 }
   \item{hit.color}{
-A string, the colour that hits will be if the graph is plotted using \code{plot()}.
+A string. The colour that the hits will be if the network is plotted using \code{plot()}.
 }
   \item{D}{
-A pre-calculated numeric distance matrix. 
+A pre-computed numeric distance matrix. If \code{NULL}, then \code{D} is computed within the function.
+}
+  \item{attempts}{
+An integer value. The number of attempts made at each stage of the placement algorithm before the function terminates. 
+}
+  \item{verbose}{
+A logical value. If \code{TRUE}, messages about the progress of the function are displayed. 
 }
 }
 \details{
-\code{SpreadHits} can be used to add hits to a graph without hits, or replace hits on a graph with hits. The probability of a vertex being labelled as a hit depends on its ranked distance from a randomly chosen or specified starting vertex. The value of \code{lambda} denotes the shape of the probability distribution used to spread the hits. The greater the value of \code{lambda}, the greater the strength of hit clustering. 
+\code{SpreadHits} can be used to add hits to a network without hits, or replace hits on a network with hits. The probability of a vertex being labelled as a hit depends on its distance from a randomly chosen starting vertex. The value of \code{lambda} denotes the shape of the probability distribution used to spread the hits. The greater the value of \code{lambda}, the greater the strength of hit clustering. The probability of vertex i being a hit is proportional to
 
-Hits are denoted as 1 under the vertex attributes \code{hits} and \code{pheno}, while misses are denoted as 0. A color can also be chosen to highlight the hits when the graph is plotted. Misses are automatically coloured grey. 
+\deqn{P[i] \sim lambda^{-d[start,i]}}
+
+where \eqn{d[start,i]} is the distance between the start vertex and vertex i.  
+
+Hits can be added in one or more clusters. If multiple clusters are being added, then the function first identifies an equal number of seed vertices at least \code{distance.cutoff} distance apart in the network. If the function cannot identify vertices that satisfy this condition within the specified number of attempts, then it returns \code{NULL}. If the function is able to find suitable seed vertices, then it proceeds to label vertices positioned around each seed vertex as hits, using a probability function shaped by \code{lambda}.
+
+Whether a vertex is a hit or a miss is given in the vertex attribute \code{hits}. If the vertex is a hit, then it has the score 1. If it is a miss, then it has the score 0. A color can also be chosen to highlight the hits when the network is plotted. Misses are automatically coloured grey. 
 }
 \value{
-A modified version of the input igraph object. Whether a vertex is a hit or miss is given under the vertex attributes \code{hits} and \code{pheno}. 
+A modified version of the input \code{igraph} object. Whether a vertex is a hit or miss is given under the vertex attribute \code{hits}. 
 }
 \author{
 Alex Cornish \email{a.cornish12@imperial.ac.uk}
 }
-\seealso{
-\code{\link[SANTA:CreateGraph]{CreateGraph}}
-}
 \examples{
-# Create a graph and add 5 clustered hits
-g1 <- CreateGraph(n=30, gen.vertex.weights=FALSE)
-g1 <- SpreadHits(g1, h=5, lambda=10)
+# create a network and add 1 cluster of 3 hits
+g1 <- erdos.renyi.game(30, p.or.m=0.1, directed=FALSE)
+g1 <- SpreadHits(g1, h=3, clusters=1, lambda=10)
 plot(g1, layout=layout.fruchterman.reingold)
 
-# Create a graph and add 5 unclustered hits
-g2 <- CreateGraph(n=30, gen.vertex.weights=FALSE)
-g2 <- SpreadHits(g2, h=5, lambda=0)
+# create a network and add 2 clusters of 3 hits
+g2 <- erdos.renyi.game(30, p.or.m=0.1, directed=FALSE)
+g2 <- SpreadHits(g2, h=3, clusters=3, distance.cutoff=2, lambda=0)
 plot(g2, layout=layout.fruchterman.reingold)
 }

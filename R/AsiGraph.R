@@ -1,4 +1,7 @@
-AsiGraph <- function(v, g) {
+AsiGraph <- function(
+    v, 
+    g
+) {
     # convert vertex indices to an igraph object
     if (class(v) == "igraph.vs") return(v)
     class(v) <- "igraph.vs"            

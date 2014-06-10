@@ -1,4 +1,8 @@
-ComputeWeightsInBins <- function(B, weight, nvertices){
+ComputeWeightsInBins <- function(
+    B, 
+    weight, 
+    nvertices
+){
 	# Use C call to compute the sum of the adjusted vertex weights for each vertex and each bin
 	diam <- max(B)
 	matrix(
