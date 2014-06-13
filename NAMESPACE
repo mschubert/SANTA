@@ -1,4 +1,4 @@
-import(igraph, Matrix, snow, stringer)
+import(igraph, Matrix, snow, stringr)
 
 export(
 	BinGraph,
