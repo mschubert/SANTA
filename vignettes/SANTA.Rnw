@@ -268,17 +268,17 @@ g <- remove.vertex.attribute(g, "color")
 \begin{center}
 <<label=fig_case_2_weights, fig=TRUE, echo=FALSE>>=
 <<case_2_weights>>
-    @
-    \end{center}
-    \caption{The distribution of (\textbf{Left}) set 1 and (\textbf{Right}) set 2 hits (red).}
-    \label{fig:case_2_weights}
-    \end{figure}
+@
+\end{center}
+\caption{The distribution of (\textbf{Left}) set 1 and (\textbf{Right}) set 2 hits (red).}
+\label{fig:case_2_weights}
+\end{figure}
     
-    Figure~\ref{fig:case_2_weights} shows the location of each set of hits on the network. The distance between the hits in set 1 and set 2 are the same. However, intuitively we expect that the clustering of the hits in set 2 to be more significant, as the hits have fewer interacting partners and are therefore less likely to be observed interacting by chance.\\
+Figure~\ref{fig:case_2_weights} shows the location of each set of hits on the network. The distance between the hits in set 1 and set 2 are the same. However, intuitively we expect that the clustering of the hits in set 2 to be more significant, as the hits have fewer interacting partners and are therefore less likely to be observed interacting by chance.\\
     
-    We will now apply \Knet and \Compactness to each set of hits in order to measure the clustering significance. We will run the function with 100 permutations. Increasing the number of permutations increases the accuracy of the functions. However, it also increases the run time. 1000 permutations were used to create the results shown in the paper. The shortest paths distance measure will be used. However, other methods will produce the same results.
+We will now apply \Knet and \Compactness to each set of hits in order to measure the clustering significance. We will run the function with 100 permutations. Increasing the number of permutations increases the accuracy of the functions. However, it also increases the run time. 1000 permutations were used to create the results shown in the paper. The shortest paths distance measure will be used. However, other methods will produce the same results.
     
-    <<echo=true>>=
+<<echo=true>>=
 # set 1
 Knet(g, nperm=100, vertex.attr="weights1", verbose=F)$pval
 Compactness(g, nperm=100, vertex.attr="weights1", verbose=F)$pval
