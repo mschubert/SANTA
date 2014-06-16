@@ -25,13 +25,13 @@ BinGraph <- function(
             # place breaks along the sorted distances
             # if there are duplicate breaks, additional breaks are added, until there is the desired number of unique breaks
             n.breaks <- nsteps + 1 # the number of breaks introduced (may contain duplicates)
-            n.breaks.unique <- 0
-            while (n.breaks.unique < nsteps + 1) {
+            breaks.unique <- numeric(0)
+            while (length(breaks.unique) < nsteps + 1) {
                 breaks <- unique(c(-Inf, 0, Dv[ceiling(seq(1, length(Dv), length.out=n.breaks)[-1])])) # always include 0 as a break
                 breaks[length(breaks)] <- Inf
-                n.breaks.unique <- length(unique(breaks))
-                if (n.breaks.unique < nsteps + 1) n.breaks <- 2 * n.breaks - n.breaks.unique 
-                if (n.breaks.unique > nsteps + 1) breaks <- sort(c(breaks[c(1,2)], sample(unique(breaks[c(-1, -2)]), nsteps-1)))
+                breaks.unique <- unique(breaks)
+                if (length(breaks.unique) < nsteps + 1) n.breaks <- 2 * n.breaks - length(breaks.unique) 
+                if (length(breaks.unique) > nsteps + 1) breaks <- sort(c(-Inf, 0, Inf, sample(breaks.unique[is.finite(breaks.unique) & breaks.unique != 0], nsteps - 2)))
             }
         } else {
             # equally split breaks across the range
@@ -50,3 +50,4 @@ BinGraph <- function(
     if (verbose) message("done")
     B    
 }
+
