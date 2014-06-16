@@ -13,6 +13,7 @@ test_BinGraph <- function() {
     # 11) returned B has same dimnames as D
     # 12) produces error when nsteps < 2
     # 13) produces error when D is not symmetric
+    # 14) works with large distances within D are present
     
     # 1, 11) 
     n.rowcol <- 4
@@ -75,4 +76,13 @@ test_BinGraph <- function() {
     D[1,2] <- 2
     diag(D) <- 0
     checkException(BinGraph(D, 1), silent=T)
+    
+    # 14) 
+    nsteps <- 5
+    D <- matrix(10^(1:16), 4,4)
+    D <- D + t(D)
+    diag(D) <- 0
+    B <- BinGraph(D, nsteps)
+    checkEquals(min(B), 1)
+    checkEquals(max(B), nsteps)
 }

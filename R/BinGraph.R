@@ -31,7 +31,7 @@ BinGraph <- function(
                 breaks[length(breaks)] <- Inf
                 n.breaks.unique <- length(unique(breaks))
                 if (n.breaks.unique < nsteps + 1) n.breaks <- 2 * n.breaks - n.breaks.unique 
-                if (n.breaks.unique > nsteps + 1) breaks <- sort(sample(unique(breaks), nsteps + 1)) # if the number of breaks is greater, sample the required amount
+                if (n.breaks.unique > nsteps + 1) breaks <- sort(c(breaks[c(1,2)], sample(unique(breaks[c(-1, -2)]), nsteps-1)))
             }
         } else {
             # equally split breaks across the range
