@@ -8,3 +8,11 @@ SANTA 1.5.2 (2014-05-18)
 ---------------------------
 NOTES: 
 	- The weights of vertices with weights NA are no longer shuffled in permutations. 
+
+
+SANTA 2.0.10 (2014-08-04)
+---------------------------
+NOTES: 
+	- Fixed minor bug in the BinGraph function. 
+
+

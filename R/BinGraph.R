@@ -36,11 +36,11 @@ BinGraph <- function(
         } else {
             # equally split breaks across the range
             breaks <- c(-Inf, seq(0, max(Dv), length.out=nsteps-1))
-            breaks[length(breaks)] <- Inf
         }
     }
     
     # use the breaks to create binned distance matrix
+    breaks[length(breaks)] <- Inf
     B <- array(as.numeric(cut(D, breaks=breaks, include.lowest=T, right=T)), dim=dim(D))
     
     # format B
