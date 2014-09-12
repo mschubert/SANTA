@@ -21,7 +21,7 @@ This is a simple algorithm that creates a grid-like network. Vertices are arrang
 An igraph object.
 }
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk}
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk}
 }
 \examples{
 # generate and plot a grid-like network containing 100 vertices. 

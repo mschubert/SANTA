@@ -61,7 +61,7 @@ Whether a vertex is a hit or a miss is given in the vertex attribute \code{hits}
 A modified version of the input \code{igraph} object. Whether a vertex is a hit or miss is given under the vertex attribute \code{hits}. 
 }
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk}
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk}
 }
 \examples{
 # create a network and add 1 cluster of 3 hits

@@ -34,7 +34,7 @@ If \code{equal.bin.fill} is \code{FALSE}, then the bin each vertex pair is place
 A integer matrix with the same dimensions as \code{D}. The values represent the distance bin that each vertex pair is placed into. 
 }
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk}
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk}
 }
 \seealso{
 \code{\link[SANTA:DistGraph]{DistGraph}}

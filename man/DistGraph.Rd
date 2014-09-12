@@ -47,12 +47,12 @@ Kondor, R.I. and Lafferty, J. (2002). \emph{Diffusion Kernels on Graph and Other
 White, S. and Smyth, P. (2003). \emph{Algorithms for Estimating Relative Importance in Networks}. Technical Report UCI-ICS 04-25.
 }
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk}
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk}
 }
 \seealso{
-\code{\link[igraph]{shortest.paths}}
+\code{\link[igraph]{shortest.paths}},
 \code{\link[SANTA:GraphDiffusion]{GraphDiffusion}},
-\code{\link[SANTA:GraphMFPT]{GraphMFPT}},
+\code{\link[SANTA:GraphMFPT]{GraphMFPT}}
 }
 \examples{
 # create a graph and compute the distance matrix using the shortest paths measure

@@ -24,7 +24,7 @@ knit_hooks$set(printfun = function(before, options, envir) {
 
 # Vignette for SANTA
 
-## Alex Cornish and Florian Markowetz
+## Alex J. Cornish and Florian Markowetz
 
 ### Introduction
 
@@ -34,8 +34,7 @@ SANTA addresses two complementary goals: it can (i) functionally annotate experi
 
 The SANTA package also contains functions that can be used to measure the distance between vertex pairs (`GraphDiffusion` and `GraphMFPT`) and a function that can be used to visualise the `Knet` function (`plot.Knet`). The `igraph} package is used to handle the networks.
 
-This vignette, along with the data provided in the SANTA package, are designed to allow the user to reproduce the results shown in the paper Cornish, A. and Markowetz, F. (2014) SANTA: quantifying the functional content of molecular networks. (Under review.) To reduce the time required to run the vignette, many of the case studies are set up to run with a reduced number of trials, permutations or gene sets. It is noted where and how the case studies differ from the paper analyses. The methods used by the SANTA package are further explained in the paper. 
-
+This vignette, along with the data provided in the SANTA package, are designed to allow the user to reproduce the results shown in the paper: Cornish, A. and Markowetz, F. (2014) *SANTA: quantifying the functional content of molecular networks.* PLOS Computational Biology. 10:9, e1003808. To reduce the time required to run the vignette, many of the case studies are set up to run with a reduced number of trials, permutations or gene sets. It is noted where and how the case studies differ from the paper analyses. The methods used by the SANTA package are further explained in the paper. 
 
 
 

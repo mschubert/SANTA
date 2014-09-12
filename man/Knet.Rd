@@ -69,12 +69,12 @@ If one vertex attribute is input, \code{Knet} is run on the single set of vertex
 \item{pval}{The p-value, calculated from a z-score derived from the observed and permuted AUKs. Equals \code{NA} if no permutations are completed.}
 }
 \references{
-Paper in preparation.
+Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional Content of Molecular Networks.}. PLOS Computational Biology. 10:9, e1003808.
 
 Okabe, A. and Yamada, I. (2001). \emph{The K-function method on a network and its computational implementation} Geographical Analysis. 33(3): 271-290.
 }
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
 }
 \seealso{
 \code{\link[SANTA:Knode]{Knode}}

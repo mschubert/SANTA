@@ -53,10 +53,10 @@ If one vertex attribute is input, \code{Compactness} is run on the single set of
 \item{pval}{The p-value, computed from a z-score derived from the observed and permuted compactness scores. \code{NA} if no permutations are completed.}
 }
 \references{
-Paper in preparation.
+Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional Content of Molecular Networks.}. PLOS Computational Biology. 10:9, e1003808.
 
 Glaab, E., Baudot A., Krasnogor N. and Valencia A. (2010). \emph{Extending pathways and processes using molecular interaction networks to analyse cancer genome data}. BMC Bioinformatics. 11(1): 597:607.
 }
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk} 
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk} 
 }

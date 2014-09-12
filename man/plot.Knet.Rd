@@ -29,10 +29,10 @@ The first plot displays the the observed curve in red and the quantiles of the p
 Two plots. The first showing the observed Knet curves against the quantiles of the permuted Knet curves. The second showing the observed AUK against the distribution of permuted AUKs. 
 }
 \references{
-Paper in preparation.
+Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional Content of Molecular Networks.}. PLOS Computational Biology. 10:9, e1003808.
 }
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
 }
 \seealso{
 \code{\link[SANTA:Knet]{Knet}}

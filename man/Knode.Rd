@@ -50,8 +50,11 @@ A sorted named numerical vector of \code{Knode} AUKs for each vertex.
 
 If one vertex attribute is input, then the \code{Knode} AUKs are calculated and a single numerical vector is returned. If more than one vertex attribute is input, then a list of vectors, one for each set of vertex weights, is returned.
 }
+\references{
+Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional Content of Molecular Networks.}. PLOS Computational Biology. 10:9, e1003808.
+}
 \author{
-Alex Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
+Alex J. Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
 }
 \seealso{
 \code{\link[SANTA:Knet]{Knet}}
