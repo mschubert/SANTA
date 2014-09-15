@@ -11,22 +11,19 @@ Plot the observed Knet curve against the quantiles of the permuted Knet curves a
 }
 \arguments{
   \item{x}{
-The results from the Knet function. If no permutations are contained within these results, then only the observed Knet curve and observed AUK are plotted.
+Results from the Knet function.
 }
   \item{sequential}{
-A logical value. If \code{TRUE}, then the plots are sequential. Otherwise, the two plots are plotted alongside each other.
+Logical, if \code{TRUE} then the plots are sequential. Otherwise, the two plots are plotted alongside each other.
 }
   \item{\dots}{
-Additional arguements to be passed to \code{plot}.  	
+Additional arguments to be passed to \code{plot}.  	
 }
 }
 \details{
 If the high-weight vertices are clustered, then the observed Knet curve and AUK will be high relative to the permuted Knet curves and AUKs. The greater the strength of clustering, the greater the difference between the observed and permuted statistics. If the strength of clustering is low, then the observed and permuted curves and AUKs will likely overlap.
 
 The first plot displays the the observed curve in red and the quantiles of the permuted curves in yellow. The quantile boundaries are displayed as grey lines. These boundaries are specified in the Knet function. The second plot displays the observed AUK as a red line and the distribution of permuted AUKs in grey. 
-}
-\value{
-Two plots. The first showing the observed Knet curves against the quantiles of the permuted Knet curves. The second showing the observed AUK against the distribution of permuted AUKs. 
 }
 \references{
 Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional Content of Molecular Networks.}. PLOS Computational Biology. 10:9, e1003808.

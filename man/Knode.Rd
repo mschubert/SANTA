@@ -12,28 +12,28 @@ edge.attr=NULL, correct.factor=1, nsteps=1000, B=NULL, verbose=TRUE)
 }
 \arguments{
   \item{g}{
-An igraph object. The network to work on. 
+\code{igraph} object, the network to work on. 
 }
   \item{dist.method}{
-A string. The method used to calculate the distance between each vertex pair.
+String, the method used to calculate the distance between each vertex pair.
 }
   \item{vertex.attr}{
-A character vector. The name of the vertex attributes under which the vertex weights to be tested are stored. The vector can contain one or more elements. Vertex weights should be greater than or equal to 0, or equal to NA if the weight is missing. The Knode statistic is still computed for vertices with missing weights. 
+Character vector, the name of the vertex attributes under which the vertex weights to be tested are stored. The vector can contain one or more elements.
 }
   \item{edge.attr}{
-A string. The name of the edge attribute to be used as distances along the edges. If an edge attribute with this name is not found, then each edge is assumed to have a distance of 1. Smaller edge distances denote stronger interactions between vertex pairs.
+String, the name of the edge attribute to be used as distances along the edges.
 }
 \item{correct.factor}{
-A numeric value. If the network contains unconnected vertices, then the distance between these vertices is set as the maximum distance between the connected vertices multiplied by \code{correct.factor}.
+Numeric value, if the network contains unconnected vertices, then the distance between these vertices is set as the maximum distance between the connected vertices multiplied by \code{correct.factor}.
 }
   \item{nsteps}{
-An integer value. The number of bins into which vertex pairs are placed. Greater values of \code{nsteps} result in greater accuracy and greater run times. 
+Integer value, the number of bins into which vertex pairs are placed.
 }
   \item{B}{
- A symmetric numerical matrix. A precomputed distance bin matrix for \code{g} output by the \code{BinGraph} function. If \code{NULL}, then B is computed by the \code{Knode} function. 
+Symmetric numerical matrix. A precomputed distance bin matrix for \code{g} output by the \code{BinGraph} function. If \code{NULL}, then B is computed within the \code{Knode} function. 
 }
   \item{verbose}{
-A logical value. If \code{TRUE}, messages about the progress of the function are displayed. 
+Logical, if \code{TRUE} messages about the progress of the function are displayed. 
 }
 }
 \details{
@@ -44,6 +44,10 @@ Using the inner sum of the \code{Knet} equation, it becomes possible to prioriti
 where \eqn{p_j} is the weight of vertex \eqn{j}, \eqn{\bar{p}} is the mean vertex weight across all vertices, and \eqn{I(dg[i,j]<=s)} is an identity function, equaling 1 if vertex \eqn{i} and vertex \eqn{j} are within distance \eqn{s} and \eqn{0} otherwise. 
 
 If the name of each vertex is stored within a vertex attribute called \code{name}, then the returned scores are labelled with these names.
+
+Vertex weights should be greater than or equal to 0, or equal to NA if the weight is missing. The Knode statistic is still computed for vertices with missing weights. 
+
+If an edge attribute with this name is not found, then each edge is assumed to have a distance of 1. Smaller edge distances denote stronger interactions between vertex pairs
 }
 \value{
 A sorted named numerical vector of \code{Knode} AUKs for each vertex. 
@@ -61,7 +65,7 @@ Alex J. Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
 }
 \examples{
 # create a network with a single cluster of high-weight vertices
-# rank all vertices by their stength of association with the high-weight vertices
+# rank all vertices by their strength of association with the high-weight vertices
 g1 <- erdos.renyi.game(15, p.or.m=0.3, directed=FALSE)
 g1 <- SpreadHits(g1, h=3, lambda=10)
 Knode(g1, vertex.attr="hits")

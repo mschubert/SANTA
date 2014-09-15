@@ -1,7 +1,7 @@
 \name{SpreadHits}
 \alias{SpreadHits}
 \title{
-Spread hits across a network in one or more clusters
+Spread hits across a network in clusters
 }
 \description{
 Spread hits across a network in one or more clusters using an exponential probability distribution related to the distance of each vertex from a seed vertex. 
@@ -13,37 +13,37 @@ edge.attr=NULL, hit.color="red", D=NULL, attempts=1000, verbose=TRUE)
 }
 \arguments{
   \item{g}{
-An igraph object. The network to work on.
+\code{igraph} object, the network to work on.
 }
   \item{h}{
-An integer value. The number of hits in each cluster.
+Integer value, the number of hits in each cluster.
 }
   \item{clusters}{
-An integer value. The number of clusters to add the network. 
+Integer value, the number of clusters to add the network. 
 }
   \item{distance.cutoff}{
-An integer value. The minimum distance between the seed vertex of each cluster. 
+Integer value, the minimum distance between the seed vertex of each cluster. 
 }
   \item{lambda}{
-A numeric value. The strength of hit clustering. If \code{lambda=0}, then the hits are randomly distributed. If \code{lambda>0}, then the hits are clustered. The greater the value of \code{lambda}, the greater the strength of the hit clustering. 
+Numeric value, the strength of hit clustering. If \code{lambda == 0}, then the hits are randomly distributed. If \code{lambda > 0}, then the hits are clustered. The greater the value of \code{lambda}, the greater the strength of the hit clustering. 
 }
   \item{dist.method}{
-A string. The method used to compute the distance between each vertex and the seed vertex. 
+String, the method used to compute the distance between each vertex and the seed vertex. 
 }
   \item{edge.attr}{
-A string. The name of the edge attribute to be used as distances along the edges. If left equal to \code{NULL}, then each edge is assumed to have a distance of 1. Smaller edge distances denote stronger interactions between vertex pairs.
+String, the name of the edge attribute to be used as distances along the edges. If \code{NULL}, then each edge is assumed to have a distance of \code{1}. Smaller edge distances denote stronger interactions between vertex pairs.
 }
   \item{hit.color}{
-A string. The colour that the hits will be if the network is plotted using \code{plot()}.
+String, the colour of the hits if the network is plotted.
 }
   \item{D}{
-A pre-computed numeric distance matrix. If \code{NULL}, then \code{D} is computed within the function.
+Pre-computed numeric distance matrix. If \code{NULL}, then \code{D} is computed within the function.
 }
   \item{attempts}{
-An integer value. The number of attempts made at each stage of the placement algorithm before the function terminates. 
+Integer value, the number of attempts made at each stage of the placement algorithm before the function terminates. 
 }
   \item{verbose}{
-A logical value. If \code{TRUE}, messages about the progress of the function are displayed. 
+Logical, if \code{TRUE} messages about the progress of the function are displayed. 
 }
 }
 \details{

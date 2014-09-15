@@ -13,37 +13,37 @@ prob=c(0, 0.05, 0.5, 0.95, 1), parallel=NULL, B=NULL, verbose=TRUE)
 }
 \arguments{
   \item{g}{
-An igraph object. The network to work on. 
+\code{igraph} object, the network to work on. 
 }
   \item{nperm}{
-An integer value. The number of permutations to be completed.
+Integer value, the number of permutations to be completed.
 }
   \item{dist.method}{
-A string. The method used to calculate the distance between each hit and every other vertex in the network.
+String, the method used to calculate the distance between vertex pairs.
 }
   \item{vertex.attr}{
-A character vector. The name of the vertex attributes under which the vertex weights to be tested are stored. The vector can contain one or more elements. Vertex weights should be greater or equal that zero or equal to NA if the weight is missing.
+Character vector, the name of the vertex attributes under which the vertex weights to be tested are stored. The vector can contain one or more elements.
 }
   \item{edge.attr}{
-A string. The name of the edge attribute to be used as distances along the edges. If an edge attribute with this name is not found, then each edge is assumed to have a distance of 1. 
+String, the name of the edge attribute to be used as distances along the edges. If an edge attribute with this name is not found, then each edge is assumed to have a distance of 1. 
 }
 \item{correct.factor}{
-A numeric value. If the network contains unconnected vertices, then the distance between these vertices is set as the maximum distance between the connected vertices multiplied by \code{correct.factor}.
+Numeric value, if the network contains unconnected vertices, then the distance between these vertices is set as the maximum distance between the connected vertices multiplied by \code{correct.factor}.
 }
   \item{nsteps}{
-An integer value. The number of bins into which vertex pairs are placed. Greater values of \code{nsteps} result in greater accuracy and greater run times. 
+Integer value, the number of bins into which vertex pairs are placed.
 }
   \item{prob}{
-A numeric vector. The quantiles to be calculated for the \code{Knet} permutations.
+Numeric vector, the quantiles to be calculated for the \code{Knet} permutations.
 }
   \item{parallel}{  
-A numeric value or \code{NULL}. If parallel computing is available, this value denotes the number of cores that the computation will be split over. 
+Numeric value or \code{NULL}. If parallel computing is available, this value denotes the number of cores that the computation will be split over. 
 }
   \item{B}{
- A symmetrical numeric matrix. A precomputed distance bin matrix for \code{g} output by the \code{BinGraph} function. If \code{NULL}, then B is computed within the \code{Knet} function. 
+Symmetrical numeric matrix. A precomputed distance bin matrix for \code{g} output by the \code{BinGraph} function. If \code{NULL}, then B is computed within the \code{Knet} function. 
 }
   \item{verbose}{
-A logical value. If \code{verbose==TRUE}, messages about the progress of the function are displayed. 
+Logical, if \code{TRUE} messages about the progress of the function are displayed. 
 }
 }
 \details{
@@ -58,15 +58,18 @@ where \eqn{p_i} is the weight of vertex \eqn{i}, \eqn{\bar{p}} is the mean verte
 In order to derive a p-value and quantify the significance of the observed distribution of weights, the observed Knet-curve is compared to Knet-curves obtained using the same network but randomly permuted vertex weights. Vertices with missing weights (\code{NA}) are not included within these permutations. The area under the Knet-curve (AUK) is calculated for the observed network and each of the permuted networks and a z-score used to produce a p-value. This p-value indicates the probability an observed AUK at least this high is seen given the null hypothesis that the vertex weights are randomly distributed.
 
 If parallel computing is possible, \code{parallel} can be used to split permutations over multiple cores. The \code{snow} package is used to manage the parallel computing. If \code{parallel=NULL} or parallel computing is not possible, then only one core is used. If a positive integer is input and parallel computing is possible, then the permutations are split over up to this many cores.
+
+Vertex weights should be greater or equal that zero or equal to NA if the weight is missing.
 }
 \value{
-If one vertex attribute is input, \code{Knet} is run on the single set of vertex weights and a list containing the statistics below is returned. If more than one vertex attribute is input, then \code{Knet} is run on each set of vertex weights and a list containing an element for each vertex attribute is returned. Each element contains a sub-list containing the statistics below for the relavent vertex attribute.
-\item{K.obs}{The Knet-function curve for the observed vertex weights.}
-\item{AUK.obs}{The area under the Knet-function curve (AUK) for the observed vertex weights.}
-\item{K.perm}{The Knet-function curve for each permutation of vertex weights. Equals \code{NA} if no permutations are completed.}
-\item{AUK.perm}{The area under the Knet-function curve (AUK) for each permutation of vertex weights. Equals \code{NA} if no permutations are completed.}
-\item{K.quan}{The quantiles for the permuted Knet-function curves. Equals \code{NA} if no permutations are completed.}
-\item{pval}{The p-value, calculated from a z-score derived from the observed and permuted AUKs. Equals \code{NA} if no permutations are completed.}
+If one vertex attribute is input, \code{Knet} is run on the single set of vertex weights and a list containing the statistics below is returned. If more than one vertex attribute is input, then \code{Knet} is run on each set of vertex weights and a list containing an element for each vertex attribute is returned. Each element contains a sub-list containing the statistics below for the relevant vertex attribute.
+
+\item{K.obs}{Knet-function curve for the observed vertex weights.}
+\item{AUK.obs}{Area under the Knet-function curve (AUK) for the observed vertex weights.}
+\item{K.perm}{Knet-function curve for each permutation of vertex weights. Equals \code{NA} if no permutations are completed.}
+\item{AUK.perm}{Area under the Knet-function curve (AUK) for each permutation of vertex weights. \code{NA} if no permutations are completed.}
+\item{K.quan}{Quantiles for the permuted Knet-function curves. \code{NA} if no permutations are completed.}
+\item{pval}{p-value, calculated from a z-score derived from the observed and permuted AUKs. \code{NA} if no permutations are completed.}
 }
 \references{
 Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional Content of Molecular Networks.}. PLOS Computational Biology. 10:9, e1003808.

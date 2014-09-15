@@ -10,7 +10,7 @@
 \alias{go.entrez}
 \alias{rnai.cheung}
 \title{
-Pre-processed dataset for the SANTA vignettes
+Pre-processed dataset for the SANTA vignette
 }
 \description{
 Pre-processed network and expression data for use in the accompanying vignette. 

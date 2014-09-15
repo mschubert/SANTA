@@ -1,7 +1,7 @@
 Package: SANTA
 Type: Package
 Title: Spatial Analysis of Network Associations
-Version: 2.1.1
+Version: 2.1.2
 Date: 15 September 2014
 Author: Alex J. Cornish and Florian Markowetz
 Maintainer: Alex J. Cornish <a.cornish12@imperial.ac.uk>
@@ -13,7 +13,7 @@ Description: This package provides methods for measuring the strength of
        clustering of the phenotype across the network (Knet). Vertices can also 
        be individually ranked by their strength of association with high-weight 
        vertices (Knode).
-License: Artistic-2.0
+License: GPL (>= 2)
 LazyLoad: yes
 VignetteBuilder: knitr
 Packaged: 2014-03-03 10:54:32 UTC; alex

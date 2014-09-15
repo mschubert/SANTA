@@ -40,7 +40,7 @@ This vignette, along with the data provided in the SANTA package, are designed t
 
 ### Overview of SANTA
 
-##### The guilt-by-association priciple
+##### The guilt-by-association principle
 
 The guilt-by-association (GBA) principle states that genes that interact are more likely to share biological function. For example, two genes seen to interact in a synthetic genetic array (SGA) are more likely to encode products involved in the same pathway or complex than two genes not seen to interact. `Knet` uses this principle to measure the strength of association between a network and a phenotype. By measuring the clustering of the gene set across biological networks it becomes possible to identify the network that best explains the mechanisms and processes that underlie the set. This principle is also used by `Knode` to prioritise genes for follow up studies. If a set of genes has been identified as being associated with a particular cellular function, then the GBA principle states that genes seen interacting with this set are also likely to be involved in the function. 
 
@@ -83,11 +83,11 @@ $$
 
 ##### Measuring the distance between pairs of vertices
 
-SANTA contains three methods for measuring the distance between pairs of vertices. Each method incorperates different aspects of the network.
+SANTA contains three methods for measuring the distance between pairs of vertices. Each method incorporates different aspects of the network.
 
-* Shortest paths. The distance along the shortest path connecting two vertices. In a graph without weighted edges, the length of the shortest path is equal to the number of edges in the path. In a graph with weighted edges, the length of the shortest path is equal to the sum of the edge weights in the path. This is the simplist measure of distance and is used by default by the SANTA package.
-* Diffusion kernel-based method. The diffusion kernel-based distance measure can be considered as the physical process of diffusion though the graph. Therefore, unlike the shortest paths method, the diffusion kernel-based method incorporates not only the distance along the shortest path connecting two vertices, but the distances along multiple paths. It therefore incorperates more of the network structure. 
-* Mean first-passage time-based (MFPT) method. The MFPT distance measure computes the distance between vertex $i$ and $j$ ($m_{i,j}$) by computing the expected amount of time that a random walk emanating from node $i$ takes to reach node $j$ for the first time. Much like the difusion kernel-based method, the  MFPT method incorperates the number of paths connecting a pair of vertices.
+* Shortest paths. The distance along the shortest path connecting two vertices. In a graph without weighted edges, the length of the shortest path is equal to the number of edges in the path. In a graph with weighted edges, the length of the shortest path is equal to the sum of the edge weights in the path. This is the simplest measure of distance and is used by default by the SANTA package.
+* Diffusion kernel-based method. The diffusion kernel-based distance measure can be considered as the physical process of diffusion though the graph. Therefore, unlike the shortest paths method, the diffusion kernel-based method incorporates not only the distance along the shortest path connecting two vertices, but the distances along multiple paths. It therefore incorporates more of the network structure. 
+* Mean first-passage time-based (MFPT) method. The MFPT distance measure computes the distance between vertex $i$ and $j$ ($m_{i,j}$) by computing the expected amount of time that a random walk emanating from node $i$ takes to reach node $j$ for the first time. Much like the diffusion kernel-based method, the  MFPT method incorporates the number of paths connecting a pair of vertices.
 
 
 
@@ -96,7 +96,7 @@ SANTA contains three methods for measuring the distance between pairs of vertice
 
 ##### i) `Knet` successfully identifies clustering on simulated networks
 
-In this section, we will use simulated networks to demnostrate that the `Knet`-function successfully quantifies the clustering of hits on a network.
+In this section, we will use simulated networks to demonstrate that the `Knet`-function successfully quantifies the clustering of hits on a network.
 
 In order to demonstrate how the `Knet` function can be used to measure the clustering of hits on a network, we will simulate a network, apply clusters of hits of different clustering strengths to the network, and use the `Knet` function to quantify the strength of clustering. 
 
@@ -110,7 +110,7 @@ set.seed(1) # for reproducibility
 g <- barabasi.game(n=500, power=1, m=1, directed=F) 
 ```
 
-A cluster of hits is simulated by first randomly choosing a seed vertex. All other vertices within the network are then ranked according to their distance to the from the seed vertex. The distance can be measured using any of the previosly described distance metrics (shortest paths, diffusion kernel and MFPT). In this example, we will use the shortest paths metric, as it is the quickest to run. However, running the analysis with the other methods will produce the same results. 
+A cluster of hits is simulated by first randomly choosing a seed vertex. All other vertices within the network are then ranked according to their distance to the from the seed vertex. The distance can be measured using any of the previously described distance metrics (shortest paths, diffusion kernel and MFPT). In this example, we will use the shortest paths metric, as it is the quickest to run. However, running the analysis with the other methods will produce the same results. 
 
 ```{r case_i_compute_d}
 # measure the distance between pairs of vertices in g
@@ -118,7 +118,7 @@ dist.method <- "shortest.paths"
 D <- DistGraph(g, dist.method=dist.method, verbose=F) 
 ```
 
-The `Knet` function computes the distances between each pair of verties in $g$. However, to reduce the time required to run the function, these distances can be computed outside the function. The `Knet` function cannot be run on the raw continuous distances. Therefore, it is neccessary to place the pairs of vertices into discreet bins. This is done using the `BinGraph} function.  
+The `Knet` function computes the distances between each pair of vertices in $g$. However, to reduce the time required to run the function, these distances can be computed outside the function. The `Knet` function cannot be run on the raw continuous distances. Therefore, it is necessary to place the pairs of vertices into discreet bins. This is done using the `BinGraph} function.  
 
 ```{r case_i_compute_b}
 # place the distances into discreet bins
@@ -170,7 +170,7 @@ rm(B, D, g)
 
 Nexy we will demonstrate the effectiveness of the `Knet` function by comparing it to a simpler metric.
 
-Glaab et al. define the compactness score as the mean distance between pairs of hits in a network. By permuting the vertices belonging to the hit set and comparing the observed compactness score to compactness score of the permuted sets, an empirical p-value can be produced. This is much like `Knet`. However, unlike `Knet`~, the adapted compactness score cannot be applied to continous distributions of vertex weights and does not incorperate vertex degree when measuring the significance of association. This is demonstrated in this toy example.
+Glaab et al. define the compactness score as the mean distance between pairs of hits in a network. By permuting the vertices belonging to the hit set and comparing the observed compactness score to compactness score of the permuted sets, an empirical p-value can be produced. This is much like `Knet`. However, unlike `Knet`~, the adapted compactness score cannot be applied to continuous distributions of vertex weights and does not incorporate vertex degree when measuring the significance of association. This is demonstrated in this toy example.
 
 First, we create the network. The vertices in this network have a range of degrees, allowing us to demonstrate the differences between `Knet` and `Compactness`. We will apply 2 sets of vertex weights, each of which will contain two interacting hits.
 
@@ -220,7 +220,7 @@ Knet(g, nperm=100, vertex.attr="weights2", verbose=F)$pval
 Compactness(g, nperm=100, vertex.attr="weights2", verbose=F)$pval
 ```
 
-The `Compactness` function does not incorperate vertex degree when measuring the significance of hit clustering. For this reason, it outputs a similar p-value for each hit set. `Knet` incorperates the global distribution of vertices and therefore identifies set 2 as clustering more significanctly than set 1. It is therefore preferable to use `Knet` instead of `Compactness` when the degree of vertices varies across a network.
+The `Compactness` function does not incorporate vertex degree when measuring the significance of hit clustering. For this reason, it outputs a similar p-value for each hit set. `Knet` incorporates the global distribution of vertices and therefore identifies set 2 as clustering more significantly than set 1. It is therefore preferable to use `Knet` instead of `Compactness` when the degree of vertices varies across a network.
 
 
 
@@ -230,11 +230,11 @@ The `Compactness` function does not incorperate vertex degree when measuring the
 
 In this section we will demonstrate how the `Knet` function can be used to identify the most effective way of building an interaction network.
 
-There is evidence that protein function is more closely related to global similarity between genetic interaction (GI) profile than to individual interactions. In order to test this, we will use the `Knet` function to quantify the strength of association between GO terms and two S. cerevisiae networks: a network of raw interactions and a network created from corrlelations in interaction profile. Both of these will be created using the data produced by Costanzo et al. If the GO terms associate more strongly with a network, then this is indication that the network is more functionally informative.
+There is evidence that protein function is more closely related to global similarity between genetic interaction (GI) profile than to individual interactions. In order to test this, we will use the `Knet` function to quantify the strength of association between GO terms and two S. cerevisiae networks: a network of raw interactions and a network created from correlations in interaction profile. Both of these will be created using the data produced by Costanzo et al. If the GO terms associate more strongly with a network, then this is indication that the network is more functionally informative.
 
 First, we will load two pre-processed networks, in the form of `igraph` objects from the `SANTA` package. `SANTA` requires all networks to be in the form of `igraph` objects. The data used to create these networks is available from http://drygin.ccbr.utoronto.ca/~costanzo2009/ and the method used is described in the associated SANTA paper.
 
-`Knet` is also able to incorporate different edge distances when quantifying the clustering of high-weight vertices. Edge distances can represent different biological properties, such as the strength of a physical interaction between 2 gene products, or in the case of our 2 networks, the strength of the genetic interaction. The smaller the edge distance, the stronger or more significant the interaction. When creating the network, we converted the correlation coeficients into edge distances by taking the $-log10$ of the scores. These distances have been stored under the edge attribute `distance`.
+`Knet` is also able to incorporate different edge distances when quantifying the clustering of high-weight vertices. Edge distances can represent different biological properties, such as the strength of a physical interaction between 2 gene products, or in the case of our 2 networks, the strength of the genetic interaction. The smaller the edge distance, the stronger or more significant the interaction. When creating the network, we converted the correlation coefficients into edge distances by taking the $-log10$ of the scores. These distances have been stored under the edge attribute `distance`.
 
 ```{r case_iii_load_networks}
 # load igraph objects
@@ -309,7 +309,7 @@ rm(g.costanzo.cor, g.costanzo.raw, network.genes, networks, xx)
 
 In this section we will demonstrate how the `Knet`-function can be used to investigate the functional rewiring of a cell by comparing the strength of association of gene sets between 2 networks.
 
-Bandyopadhyay et al. mapped genetic interaction (GI) networks in yeast under normal laboratory conditions and in yeast exposed to the DNA-damaging agent methyl methanesulfonate (MMS). In order to investigate the differences between these functional networks, we will use the `Knet`-function to quantify the strength of assocation of a set of genes involved in responding to DNA damage. While we cannot learn much from this example, sets of genes involved in other processes can also be tested in order to identify other processes involved in the responce to DNA damage.
+Bandyopadhyay et al. mapped genetic interaction (GI) networks in yeast under normal laboratory conditions and in yeast exposed to the DNA-damaging agent methyl methanesulfonate (MMS). In order to investigate the differences between these functional networks, we will use the `Knet`-function to quantify the strength of association of a set of genes involved in responding to DNA damage. While we cannot learn much from this example, sets of genes involved in other processes can also be tested in order to identify other processes involved in the response to DNA damage.
 
 We will now load the two interactions networks. These networks were created using correlations in GI profile, as described in the previous section. This is because, as previously demonstrated, using correlations in GI profile as edges results in a functionally more-informative network.
 
@@ -425,7 +425,7 @@ rm(xx, networks, g.srivas.high, g.srivas.untreated)
 
 ##### vi) Using `Knet` to identify the network most informative about cancer cell lines
 
-In this section, we will apply a continuous distribution of vertex weights, describing the strength of evidence that a gene is involved in the maintanence of cancer cell lines, to two networks in order to identify the network that best explains the mechanisms that underlie cell line maintanence.
+In this section, we will apply a continuous distribution of vertex weights, describing the strength of evidence that a gene is involved in the maintenance of cancer cell lines, to two networks in order to identify the network that best explains the mechanisms that underlie cell line maintenance.
 
 Biological networks can be built using a wide range of data sources, including co-expression data, data on physical interactions or genetic interaction data. Networks can also be created by combining data sources. The HumanNet network was created by combining 21 data sources. The IntAct network is created using curated data on physical interactions.
 
@@ -439,7 +439,7 @@ rnai.cheung[!is.finite(rnai.cheung)] <- max(rnai.cheung[is.finite(rnai.cheung)])
 rnai.cheung[rnai.cheung < 0] <- 0
 ```
 
-Next, we will load the interaction data for the two network and create an `igraph` object for each. No edge weights are given for the IntAct network. Each of the interactions in the HumanNet network is associated with a log likelihood score (LLS), describing the probablity the functional interaction occuring given the data used. In order to reduce the density of the network, interactions with an $LLS < 2$ have been removed. Distances for the remaining edges have been produced by dividing the weights by the maximum weight and taking the $-log_{10}$ of this score. We have removed all genes not part of the largest cluster from each network. 
+Next, we will load the interaction data for the two network and create an `igraph` object for each. No edge weights are given for the IntAct network. Each of the interactions in the HumanNet network is associated with a log likelihood score (LLS), describing the probability the functional interaction occurring given the data used. In order to reduce the density of the network, interactions with an $LLS < 2$ have been removed. Distances for the remaining edges have been produced by dividing the weights by the maximum weight and taking the $-log_{10}$ of this score. We have removed all genes not part of the largest cluster from each network. 
 
 ```{r case_vi_networks}
 # import and create IntAct network
@@ -510,7 +510,7 @@ The BioNet tool is available as an R-package.
 #library(BioNet)
 ```
 
-For previously explained reasons, we will use the Barabasi-Albert model of preferential attachment to create the network. We will use the `SpreadHits` function to apply 3 clusters of 10 hits to the network. In the associated paper, this analysis was also run with 2 and 4 clusters. The `SpreadHits` function first identifies a seed node for each cluster, located a minumum distance from each other. We will use a distance cutoff of 12, to ensure that each of the clusters of hits is located on a different part of the network. The `shortest.paths` method will be used to measure distances when spreading hits. However, the same results can be produced using the `diffusion` and `mfpt` distance measures. How strongly the hits cluster depend on the parameters `lambda`, which we will set to 10, to ensure that there is strong clustering of the hits.
+For previously explained reasons, we will use the Barabasi-Albert model of preferential attachment to create the network. We will use the `SpreadHits` function to apply 3 clusters of 10 hits to the network. In the associated paper, this analysis was also run with 2 and 4 clusters. The `SpreadHits` function first identifies a seed node for each cluster, located a minimum distance from each other. We will use a distance cutoff of 12, to ensure that each of the clusters of hits is located on a different part of the network. The `shortest.paths` method will be used to measure distances when spreading hits. However, the same results can be produced using the `diffusion` and `mfpt` distance measures. How strongly the hits cluster depend on the parameters `lambda`, which we will set to 10, to ensure that there is strong clustering of the hits.
 
 ```{r case_vii_network}
 # # required parameters
@@ -524,7 +524,7 @@ For previously explained reasons, we will use the Barabasi-Albert model of prefe
 #     lambda=10, dist.method="shortest.paths", verbose=FALSE)
 ```
 
-We will now simulate a distribution of p-values and apply them to the network as a vertex attribute. The p-values of the non-hit vertices will be selected from a uniform distribution, as would be expected if there was no associated between these genes and the phenotype being studied. The p-values of the hits will be selected from a truncated normal distribution centered around 0.
+We will now simulate a distribution of p-values and apply them to the network as a vertex attribute. The p-values of the non-hit vertices will be selected from a uniform distribution, as would be expected if there was no associated between these genes and the phenotype being studied. The p-values of the hits will be selected from a truncated normal distribution centred around 0.
 
 ```{r case_vii_pvalues}
 # # simulate p-values
@@ -607,7 +607,7 @@ In this analysis, we will use expression data from two subtypes of diffuse large
 # data(interactome) 
 ```
 
-In order to use both the expression and survival data, it is neccessary to combine this into a single p-value. First, differential analysis is used to identify genes that are significantly differentially expression between the two tumour types (results contained within the DLBCL package). We will then use order statistics to combine the differential expression p-values with the survival p-values.
+In order to use both the expression and survival data, it is necessary to combine this into a single p-value. First, differential analysis is used to identify genes that are significantly differentially expression between the two tumour types (results contained within the DLBCL package). We will then use order statistics to combine the differential expression p-values with the survival p-values.
 
 ```{r case_viii_pvalues}
 # # extract entrez IDs

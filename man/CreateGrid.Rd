@@ -11,14 +11,14 @@ CreateGrid(n=100)
 }
 \arguments{
   \item{n}{
-An integer value. The number of vertices to be included. 
+Integer value, the number of vertices to be included. 
 }
 }
 \details{
 This is a simple algorithm that creates a grid-like network. Vertices are arranged in the largest square lattice possible. Vertices not included within this square are added as an additional row. Vertices are connected by edges to their closest neighbours.
 }
 \value{
-An igraph object.
+\code{igraph} object.
 }
 \author{
 Alex J. Cornish \email{a.cornish12@imperial.ac.uk}
