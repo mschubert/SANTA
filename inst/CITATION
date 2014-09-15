@@ -1,14 +1,16 @@
 citEntry(entry = "Article",
-  author = “Alex J Cornish and Florian Markowetz”,
+  author = "Alex J Cornish and Florian Markowetz",
   title = "SANTA: Quantifying the Functional Content of Molecular Networks.",
-  journal = “PLOS Computational Biology”,
-  year = "2014”,
-  volume = “10”,
+  journal = "PLOS Computational Biology",
+  year = "2014",
+  volume = "10",
   pages = "e1003808",
-  number = “9”,
+  number = "9",
   doi = "10.1371/journal.pcbi.1003808",
   textVersion  = 
-  paste(“Cornish AJ, Markowetz F.”, 
-	"SANTA: Quantifying the Functional Content of Molecular Networks",
-	“PLOS Computational Biology 10:e1003808, 2014”,sep=" ")
+  paste("Cornish AJ, Markowetz F.", 
+	"SANTA: Quantifying the Functional Content of Molecular Networks,",
+	"PLOS Computational Biology 10:e1003808, 2014.",sep=" ")
 )
+
+
