@@ -1,0 +1,16 @@
+import(igraph, Matrix, snow, stringr)
+
+export(
+	BinGraph,
+	CreateGrid, 
+	Compactness,
+	DistGraph, 
+	GraphDiffusion, 
+	GraphMFPT,
+	Knet, 
+	Knode, 
+	plot.Knet, 
+	SpreadHits
+)
+
+useDynLib(SANTA)
