@@ -27,7 +27,7 @@ GraphMFPT <- function(
     
     # return rows for each vertex in v
     D <- as.matrix(D[v, ])
-    dimnames(D) <- list(v$name, V(g)$name) 
+    dimnames(D) <- list(V(g)$name[as.numeric(v)], V(g)$name) 
     
     D
 }

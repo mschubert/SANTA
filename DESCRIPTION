@@ -1,8 +1,8 @@
 Package: SANTA
 Type: Package
 Title: Spatial Analysis of Network Associations
-Version: 2.5.0
-Date: 15 September 2014
+Version: 2.5.1
+Date: 01 July 2015
 Author: Alex J. Cornish and Florian Markowetz
 Maintainer: Alex J. Cornish <a.cornish12@imperial.ac.uk>
 Imports: Matrix, snow, stringr

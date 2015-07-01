@@ -1,23 +1,34 @@
-SANTA 1.3.10 (2014-03-03)
+SANTA 2.5.1 (2015-07-01)
 ---------------------------
-NOTES: 
-	- Fixed minor memory leak in the Knet function. 
-
-
-SANTA 1.5.2 (2014-05-18)
----------------------------
-NOTES: 
-	- The weights of vertices with weights NA are no longer shuffled in permutations. 
-
-
-SANTA 2.0.10 (2014-08-04)
----------------------------
-NOTES: 
-	- Fixed minor bug in the BinGraph function. 
-
+- Updated for igraph version 1.0.1.
+	
 
 SANTA 2.1.0 (2014-09-12)
 ---------------------------
-NOTES: 
-	- CITATION file added. 
+- CITATION file added. 
+	
+	
+SANTA 2.0.10 (2014-08-04)
+---------------------------
+- Fixed minor bug in the BinGraph function. 
+		
+		
+SANTA 1.5.2 (2014-05-18)
+---------------------------
+- The weights of vertices with weights NA are no longer shuffled in permutations. 
+
+		
+SANTA 1.3.10 (2014-03-03)
+---------------------------
+- Fixed minor memory leak in the Knet function. 
+
+
+
+
+
+
+
+
+
+
 
