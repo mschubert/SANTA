@@ -1,3 +1,8 @@
+SANTA 2.5.2 (2015-07-03)
+---------------------------
+- Removed stringr dependency as no longer required.
+
+
 SANTA 2.5.1 (2015-07-01)
 ---------------------------
 - Updated for igraph version 1.0.1.
