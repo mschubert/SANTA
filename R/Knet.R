@@ -15,7 +15,7 @@ Knet <- function(
     
     # check that vertex weights and edge distances are present and suitable. Convert if neccessary
     dist.method <- match.arg(dist.method)
-    g <- CheckAttributes(g, vertex.attr, edge.attr, verbose)
+    g <- CheckAttributes(g, query.vertex.attr=vertex.attr, edge.attr=edge.attr, verbose=verbose)
     
     # the results are saved in a list with an entry for each vertex.attr. Done even if only 1 vertex.attr supplied
     tmp        <- vector("list", 6)
@@ -62,20 +62,22 @@ Knet <- function(
         
         # determine whether it is more efficient to use the .c code that removes rows (manyzeros) or not (fewzeros)
         c.function.to.use <- if (sum(vertex.weights == 0) < length(vertex.weights) / 2) "computenetK_fewzeros" else "computenetK_manyzeros"
-        
+   
         # calculate the observed netK and netAUK
-        res[[attr]]$K.obs <- .Call(c.function.to.use, Bv, vertex.weights, nvertices, maxB)
+        res[[attr]]$K.obs <- .Call(c.function.to.use, Bv, vertex.weights, vertex.weights, nvertices, maxB)
         res[[attr]]$AUK.obs <- sum(res[[attr]]$K.obs) / length(res[[attr]]$K.obs)
        
         # if specified, run the Knet function on permutations of the graph
         if (!is.null(nperm) & nperm > 0) {
             if (is.null(parallel)) {
                 # run permutations without parallel computing
-                res[[attr]]$K.perm <- sapply(1:nperm, function(i) .Call(c.function.to.use, Bv, Shuffle(vertex.weights, ignore=vertex.weights.is.na), nvertices, maxB)) 
+                shuffled.weighted <- Shuffle(vertex.weights, ignore=vertex.weights.is.na)
+                res[[attr]]$K.perm <- sapply(1:nperm, function(i) .Call(c.function.to.use, Bv, shuffled.weighted, shuffled.weighted, nvertices, maxB)) 
             } else {
                 # run permutations with parallel computing
                 clusterExport(cl, "vertex.weights", envir=environment())
-                res[[attr]]$K.perm <- parSapply(cl, 1:nperm, function(i) .Call(c.function.to.use, Bv, Shuffle(vertex.weights, ignore=vertex.weights.is.na), nvertices, maxB))
+                shuffled.weighted <- Shuffle(vertex.weights, ignore=vertex.weights.is.na)
+                res[[attr]]$K.perm <- parSapply(cl, 1:nperm, function(i) .Call(c.function.to.use, Bv, shuffled.weighted, shuffled.weighted, nvertices, maxB))
             }
             
             # calculate the quantiles, AUK and p-values (through the z-score) for the permutations

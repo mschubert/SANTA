@@ -212,12 +212,12 @@ We will now apply `Knet` and `Compactness` to each set of hits in order to measu
 
 ```{r case_ii_pvalues}
 # set 1
-#Knet(g, nperm=100, vertex.attr="weights1", verbose=F)$pval
-#Compactness(g, nperm=100, vertex.attr="weights1", verbose=F)$pval
+Knet(g, nperm=100, vertex.attr="weights1", verbose=F)$pval
+Compactness(g, nperm=100, vertex.attr="weights1", verbose=F)$pval
 
 # set 2
-#Knet(g, nperm=100, vertex.attr="weights2", verbose=F)$pval
-#Compactness(g, nperm=100, vertex.attr="weights2", verbose=F)$pval
+Knet(g, nperm=100, vertex.attr="weights2", verbose=F)$pval
+Compactness(g, nperm=100, vertex.attr="weights2", verbose=F)$pval
 ```
 
 The `Compactness` function does not incorporate vertex degree when measuring the significance of hit clustering. For this reason, it outputs a similar p-value for each hit set. `Knet` incorporates the global distribution of vertices and therefore identifies set 2 as clustering more significantly than set 1. It is therefore preferable to use `Knet` instead of `Compactness` when the degree of vertices varies across a network.

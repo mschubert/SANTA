@@ -60,5 +60,5 @@ Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional C
 Glaab, E., Baudot A., Krasnogor N. and Valencia A. (2010). \emph{Extending pathways and processes using molecular interaction networks to analyse cancer genome data}. BMC Bioinformatics. 11(1): 597:607.
 }
 \author{
-Alex J. Cornish \email{a.cornish12@imperial.ac.uk} 
+Alex J. Cornish 
 }

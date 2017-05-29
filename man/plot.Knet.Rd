@@ -29,7 +29,7 @@ The first plot displays the the observed curve in red and the quantiles of the p
 Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional Content of Molecular Networks.}. PLOS Computational Biology. 10:9, e1003808.
 }
 \author{
-Alex J. Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
+Alex J. Cornish and Florian Markowetz
 }
 \seealso{
 \code{\link[SANTA:Knet]{Knet}}

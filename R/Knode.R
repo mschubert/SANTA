@@ -12,7 +12,7 @@ Knode <- function(
     
     # setup
     dist.method <- match.arg(dist.method)
-    g <- CheckAttributes(g, vertex.attr, edge.attr, verbose) # check that vertex weights and edge distances are present and suitable
+    g <- CheckAttributes(g, seed.vertex.attr=vertex.attr, edge.attr=edge.attr, verbose=verbose) # check that vertex weights and edge distances are present and suitable
     nvertices <- as.integer(vcount(g))
     if (is.null(get.vertex.attribute(g, "name"))) g <- set.vertex.attribute(g, "name", value=as.character(1:nvertices)) # if vertices do not have a name, add some
     

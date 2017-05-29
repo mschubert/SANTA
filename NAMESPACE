@@ -2,14 +2,16 @@ import(igraph, Matrix, snow)
 
 export(
 	BinGraph,
-	CreateGrid, 
+	CreateGrid,
 	Compactness,
-	DistGraph, 
-	GraphDiffusion, 
+	DistGraph,
+	GraphDiffusion,
 	GraphMFPT,
-	Knet, 
-	Knode, 
-	plot.Knet, 
+	Knet,
+	Knode,
+	Kset,
+	plot.Knet,
+	plot.Kset,
 	SpreadHits
 )
 

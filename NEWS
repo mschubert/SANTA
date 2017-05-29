@@ -1,3 +1,8 @@
+SANTA 2.7.0 (2017-03-02)
+---------------------------
+- Development version of the Kset function added.
+
+
 SANTA 2.5.2 (2015-07-03)
 ---------------------------
 - Removed stringr dependency as no longer required.

@@ -38,7 +38,7 @@ Numeric matrix, containing the diffusion kernel-based vertex pair distances betw
 Kondor, R.I. and Lafferty, J. (2002). \emph{Diffusion Kernels on Graph and Other Discrete Structures}. Proc. Intl. Conf. Machine Learning. 
 }
 \author{
-Alex J. Cornish \email{a.cornish12@imperial.ac.uk}
+Alex J. Cornish
 }
 \seealso{
 \code{\link[SANTA:GraphMFPT]{GraphMFPT}},

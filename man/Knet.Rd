@@ -77,7 +77,7 @@ Cornish, A.J. and Markowetz, F. (2014) \emph{SANTA: Quantifying the Functional C
 Okabe, A. and Yamada, I. (2001). \emph{The K-function method on a network and its computational implementation} Geographical Analysis. 33(3): 271-290.
 }
 \author{
-Alex J. Cornish \email{a.cornish12@imperial.ac.uk} and Florian Markowetz
+Alex J. Cornish and Florian Markowetz
 }
 \seealso{
 \code{\link[SANTA:Knode]{Knode}}

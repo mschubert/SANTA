@@ -13,7 +13,7 @@ Compactness <- function(
     
     # check that vertex weights and edge distances are present and suitable. Convert if neccessary
     dist.method <- match.arg(dist.method)
-    g <- CheckAttributes(g, vertex.attr, edge.attr, verbose) 
+    g <- CheckAttributes(g, vertex.attr, edge.attr=edge.attr, verbose=verbose) 
    
     # produce list to hold results
     element.names <- c("score.obs", "score.perm", "pval") 

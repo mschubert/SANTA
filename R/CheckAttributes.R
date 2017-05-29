@@ -1,10 +1,14 @@
 CheckAttributes <- function(
     g, 
-    vertex.attr="pheno", 
+    seed.vertex.attr=NULL,
+    query.vertex.attr=NULL, 
     edge.attr=NULL,
     verbose=T
 ) {
     # check that vertex and edge weights are present in a graph and convert them if neccessary
+    
+    # combine seed and query vertices
+    vertex.attr <- c(seed.vertex.attr, query.vertex.attr)
     
     # check that all supplied vertex attributes are present on the graph
     if (!all(vertex.attr %in% list.vertex.attributes(g))) stop("not all vertex attributes found on graph")
